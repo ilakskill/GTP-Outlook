@@ -18,64 +18,62 @@
       type="text/javascript"
     ></script>
     <script type="text/javascript">
-      Office.onReady(() => {
+
+
+Office.onReady(function() {
         // Get the current email item
         var item = Office.context.mailbox.item;
 
         // Get the body of the email as plain text
-        item.getSelectedDataAsync(Office.CoercionType.Text, function (result) {
-          if (result.status === Office.AsyncResultStatus.Succeeded) {
-            // The plain text body of the email is in result.value
-            console.log(result.value);
-          } else {
-            console.error(result.error.message);
-          }
-        });
+item.getSelectedDataAsync(Office.CoercionType.Text, function (result) {
+  if (result.status === Office.AsyncResultStatus.Succeeded) {
+    const plainTextBody = result.value;
 
-        const form = document.getElementById("apikey-form");
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
-          const apiKey = document.getElementById("apikey").value.trim();
-          const userEmailContent = document
-            .getElementById("user-email-content")
-            .value.trim();
+    const form = document.getElementById("apikey-form");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const apiKey = document.getElementById("apikey").value.trim();
 
-          const payload = {
-            messages: [
-              {
-                role: "system",
-                content:
-                  "Act like a project manager but do not state you are a project manager and respond to this email.",
-              },
-              { role: "user", content: userEmailContent },
-            ],
-            model: "gpt-3.5-turbo",
-            max_tokens: 2048,
-            temperature: 0.7,
-            n: 1,
-            stream: false,
-          };
+      const payload = {
+        messages: [
+          {
+            role: "system",
+            content:
+              "Act like a project manager but do not state you are a project manager and respond to this email.",
+          },
+          { role: "user", content: plainTextBody },
+        ],
+        model: "gpt-3.5-turbo",
+        max_tokens: 2048,
+        temperature: 0.7,
+        n: 1,
+        stream: false,
+      };
 
-          const url = "https://api.openai.com/v1/chat/completions";
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + apiKey,
-          };
+      fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const assistantMessage = data.choices[0].text;
+          const responseDiv = document.getElementById("response");
+          responseDiv.innerHTML = assistantMessage;
+          document.cookie = `apiKey=${apiKey}`;
+        })
+        .catch((error) => console.error(error));
+    });
+  } else {
+    console.error(result.error.message);
+  }
+});
 
-          fetch(url, {
-            method: "POST",
-            headers,
-            body: JSON.stringify(payload),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              const assistantMessage = data.choices[0].message.content;
-              const responseDiv = document.getElementById("response");
-              responseDiv.innerHTML = assistantMessage;
-              document.cookie = `apiKey=${apiKey}`;
-            })
-            .catch((error) => console.error(error));
-        });
+        
+        
       });
     </script>
   </body>
