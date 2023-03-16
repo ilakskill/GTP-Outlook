@@ -9,7 +9,7 @@
     <form id="apikey-form">
       <div>
         <label for="apikey">API Key:</label>
-        <input type="text" id="apikey" name="apikey" required />
+        <input id="apikey" name="apikey" required type="text" />
       </div>
       <div>
         <label for="user-email-content">Email Body:</label>
@@ -62,9 +62,7 @@
       type="text/javascript"
     ></script>
     <script type="text/javascript">
-
-      
-Office.onReady(function() {
+      Office.onReady(function() {
         // Get the current email item
         var item = Office.context.mailbox.item;
 
@@ -81,17 +79,20 @@ Office.onReady(function() {
         const form = document.getElementById("apikey-form");
         form.addEventListener("submit", (event) => {
           event.preventDefault();
-          const apiKey = document.getElementById("apikey").value.trim();
+          let apiKey = document.getElementById("apikey").value.trim();
+          if (!apiKey) {
+            apiKey = getCookie("apiKey");
+          }
           const userEmailContent = document
-            .getElementById("user-email-content")
-            .value.trim();
+                  .getElementById("user-email-content")
+                  .value.trim();
 
           const payload = {
             messages: [
               {
                 role: "system",
                 content:
-                  "respond to this email.",
+                        "respond to this email.",
               },
               { role: "user", content: userEmailContent },
             ],
@@ -113,25 +114,33 @@ Office.onReady(function() {
             headers,
             body: JSON.stringify(payload),
           })
-            .then((response) => response.json())
-            .then((data) => {
-              const assistantMessage = data.choices[0].message.content;
-const responseDiv = document.getElementById("response");
+                  .then((response) => response.json())
+                  .then((data) => {
+                    const assistantMessage = data.choices[0].message.content;
+                    const responseDiv = document.getElementById("response");
 
-const messageHTML = `
-  <div style="background-color: #F2F2F2; padding: 20px; border: 1px solid #E6E6E6;">
-    <div style="color: #707070; font-size: 12px; margin-bottom: 10px;">Assistant:</div>
-    <div style="padding: 10px; font-size: 16px; line-height: 1.5; background-color: #FFFFFF; border: 1px solid #E6E6E6; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">${assistantMessage}</div>
-  </div>
-`;
+                    const messageHTML = `
+          <div style="background-color: #F2F2F2; padding: 20px; border: 1px solid #E6E6E6;">
+            <div style="color: #707070; font-size: 12px; margin-bottom: 10px;">Assistant:</div>
+            <div style="padding: 10px; font-size: 16px; line-height: 1.5; background-color: #FFFFFF; border: 1px solid #E6E6E6; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">${assistantMessage}</div>
+          </div>
+        `;
 
-
-responseDiv.innerHTML = messageHTML;
-              document.cookie = `apiKey=${apiKey}`;
-            })
-            .catch((error) => console.error(error));
+                    responseDiv.innerHTML = messageHTML;
+                    document.cookie = `apiKey=${apiKey}`;
+                  })
+                  .catch((error) => console.error(error));
         });
+
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(";").shift();
+        }
       });
+
+      
+
     </script>
   </body>
 </html>
