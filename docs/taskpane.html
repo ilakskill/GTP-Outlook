@@ -4,12 +4,56 @@
     <title>OpenAI API Test</title>
   </head>
   <body>
+   
+    
     <form id="apikey-form">
-      <label for="apikey">API Key:</label>
-      <input type="text" id="apikey" name="apikey" required />
-      <textarea id="user-email-content" name="user-email-content"></textarea>
-      <button type="submit">Submit</button>
+      <div>
+        <label for="apikey">API Key:</label>
+        <input type="text" id="apikey" name="apikey" required />
+      </div>
+      <div>
+        <label for="user-email-content">Email Body:</label>
+        <textarea id="user-email-content" name="user-email-content"></textarea>
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
     </form>
+    
+    <style>
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1rem;
+        padding: 1rem;
+        border: 1px solid black;
+        border-radius: 0.5rem;
+      }
+    
+      label {
+        font-weight: bold;
+      }
+    
+      input,
+      textarea {
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ccc;
+      }
+    
+      button {
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        background-color: #0078d4;
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+
+    
     <hr />
     <div id="response"></div>
 
