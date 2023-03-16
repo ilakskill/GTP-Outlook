@@ -1,6 +1,6 @@
 # Outlook GPT Email helper Add-in
 
-This is an add-in for Microsoft Outlook that allows users to rephrase a selected text using the OpenAI language model.
+This is an add-in for Microsoft Outlook that allows users to use the OpenAI language model to do all of the heavy lifting during the work day.
 
 ## How to install
 
