@@ -4,7 +4,7 @@
   <Version>0.0.0.1</Version>
   <ProviderName>Fresh</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue=""/>
+  <DisplayName DefaultValue="GPT Email helper"/>
   <Description DefaultValue="A tool to rephrase text in different formats"/>
   <IconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-128.png"/>
