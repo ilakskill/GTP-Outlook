@@ -19,7 +19,6 @@
     ></script>
     <script type="text/javascript">
       Office.onReady(() => {
-
         // Get the current email item
         var item = Office.context.mailbox.item;
 
@@ -28,8 +27,6 @@
           if (result.status === Office.AsyncResultStatus.Succeeded) {
             // The plain text body of the email is in result.value
             console.log(result.value);
-
-            
           } else {
             console.error(result.error.message);
           }
@@ -39,7 +36,7 @@
         form.addEventListener("submit", (event) => {
           event.preventDefault();
           const apiKey = document.getElementById("apikey").value.trim();
-          const userEmailContent = result.value
+          const userEmailContent = document
             .getElementById("user-email-content")
             .value.trim();
 
