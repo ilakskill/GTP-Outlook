@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
   <Id>63dd54c4-4a76-43f6-97a0-f7445d5d452f</Id>
-  <Version>1.0.0.0</Version>
-  <ProviderName>Stefano Aldegheri</ProviderName>
+  <Version>0.0.0.1</Version>
+  <ProviderName>Fresh</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="GPT Rephraser"/>
+  <DisplayName DefaultValue=""/>
   <Description DefaultValue="A tool to rephrase text in different formats"/>
-  <IconUrl DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser/assets/icon-128.png"/>
-  <SupportUrl DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser"/>
+  <IconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook"/>
   <AppDomains>
     <AppDomain>https://ilakskill.github.io</AppDomain>
   </AppDomains>
@@ -23,7 +23,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser/taskpane.html"/>
+        <SourceLocation DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.html"/>
         <RequestedHeight>300</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -69,16 +69,16 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/OutlookGPTRephraser/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Text"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="GPT Rephraser"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="What What"/>
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens text rephrasing panel"/>
