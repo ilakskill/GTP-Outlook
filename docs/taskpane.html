@@ -149,24 +149,22 @@
 
 
           // Get the body of the email as plain text
-          item.body.getAsync(Office.CoercionType.text, function (result) {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-              const userEmailHTML = result.value;
+         // Get the currently selected item in the Windows client of Outlook
+var item = Office.context.mailbox.item;
 
-              const parser = new DOMParser();
-              const emailDocument = parser.parseFromString(
-                userEmailHTML,
-                "text/html"
-              );
-             
-              
+// Get the selected text from the email message
+var selectedText = item.getSelectedDataAsync("text", function(result) {
+    if (result.status === Office.AsyncResultStatus.Succeeded) {
+        // Retrieve the selected text from the email message
+        var selectedText = result.value;
 
-              console.log(emailDocument);
+        // Do something with the selected text
+        console.log(selectedText);
 
               const payload = {
                 messages: [
                   { role: "system", content: systemInstructions },
-                  { role: "user", content: userEmailContent },
+                  { role: "user", content: selectedText },
                 ],
                 model: "gpt-3.5-turbo",
                 max_tokens: 2048,
@@ -188,8 +186,8 @@
               })
                 .then((response) => response.json())
                 .then((data) => {
-                  //const assistantMessage = data.choices[0].message.content;
-                  const assistantMessage = emailDocument;
+                  const assistantMessage = data.choices[0].message.content;
+                  //const assistantMessage = emailDocument;
 
                   const responseDiv = document.getElementById("response");
 
