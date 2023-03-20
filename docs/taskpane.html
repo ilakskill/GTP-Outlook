@@ -132,7 +132,7 @@
         // Get the current email item
         var item = Office.context.mailbox.item;
 
-
+        let userEmailContent; // define userEmailContent variable
 
         const form = document.getElementById("apikey-form");
         form.addEventListener("submit", (event) => {
@@ -142,12 +142,10 @@
                 apiKey = getCookie("apiKey");
             }
 
-            let userEmailContent; // define userEmailContent variable
-
             const systemInstructions = document
                 .getElementById("instructions-content")
                 .value.trim();
-// Get the body of the email as plain text
+            // Get the body of the email as plain text
             item.body.getAsync(Office.CoercionType.Text, function (result) {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
 
@@ -157,7 +155,7 @@
                     const payload = {
                         messages: [
                             { role: "system", content: systemInstructions },
-                            { role: "user", content: userEmailContent  }
+                            { role: "user", content: userEmailContent }
                         ],
                         // todo: make this a dropdown option above
                         model: "gpt-3.5-turbo",
@@ -170,53 +168,49 @@
                         stream: false,
                     };
 
-
-                } else {
-                    console.error(result.error.message);
-                }
-            });
-
-
+                    const url = "https://api.openai.com/v1/chat/completions";
+                    const headers = {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + apiKey,
+                    };
 
 
-            const url = "https://api.openai.com/v1/chat/completions";
-            const headers = {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + apiKey,
-            };
+                    fetch(url, {
+                        method: "POST",
+                        headers,
+                        body: JSON.stringify(payload),
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const assistantMessage = data.choices[0].text;
+                            const responseDiv = document.getElementById("response");
 
-            fetch(url, {
-                method: "POST",
-                headers,
-                body: JSON.stringify(payload),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    const assistantMessage = data.choices[0].message.content;
-                    const responseDiv = document.getElementById("response");
-
-                    const messageHTML = `
+                            const messageHTML = `
           <div>
             <div>Assistant:</div>
             <div>${assistantMessage}</div>
           </div>
         `;
 
-                    responseDiv.innerHTML = messageHTML;
+                            responseDiv.innerHTML = messageHTML;
 
-                    // the orginal is below
-                    //document.cookie = `apiKey=${apiKey}`;
+                            // the orginal is below
+                            //document.cookie = `apiKey=${apiKey}`;
 
-                    // Set the cookie expiration to 30 days from now
-                    const daysUntilExpiration = 30;
-                    const expirationDate = new Date();
-                    expirationDate.setDate(
-                        expirationDate.getDate() + daysUntilExpiration
-                    );
+                            // Set the cookie expiration to 30 days from now
+                            const daysUntilExpiration = 30;
+                            const expirationDate = new Date();
+                            expirationDate.setDate(
+                                expirationDate.getDate() + daysUntilExpiration
+                            );
 
-                    document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
-                })
-                .catch((error) => console.error(error));
+                            document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
+                        })
+                        .catch((error) => console.error(error));
+                } else {
+                    console.error(result.error.message);
+                }
+            });
         });
 
         function getCookie(name) {
@@ -234,10 +228,15 @@
             document.getElementById("apikey").value = apiKey;
 
             // Hide the API key input field
-            document.getElementById("apikey").parentElement.style.display = "none";
+            document
+                .getElementById("apikey")
+                .closest("div")
+                .setAttribute("style", "display: none");
         }
     });
 
+
+    
 
 </script>
 </body>
