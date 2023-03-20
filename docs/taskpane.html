@@ -125,7 +125,7 @@
             // Get the current email item
             var item = Office.context.mailbox.item;
 
-            let userEmailContent; // define userEmailContent variable
+            
 
             const form = document.getElementById("apikey-form");
             form.addEventListener("submit", (event) => {
@@ -134,6 +134,7 @@
                 if (!apiKey) {
                     apiKey = getCookie("apiKey");
                 }
+                let userEmailContent =document.getElementById("instructions-content").value.trim();; // define userEmailContent variable
 
                 const systemInstructions = document
                     .getElementById("instructions-content")
@@ -142,6 +143,8 @@
                 item.body.getAsync(Office.CoercionType.Html, function (result) {
                     if (result.status === Office.AsyncResultStatus.Succeeded) {
                         const userEmailHTML = result.value;
+
+
                         const parser = new DOMParser();
                         const emailDocument = parser.parseFromString(
                             userEmailHTML,
@@ -152,7 +155,6 @@
                         const userEmailContent = latestEmail.trim();
                         console.log(userEmailContent);
 
-                        // Use latestMessage variable here
 
                         const payload = {
                             messages: [
