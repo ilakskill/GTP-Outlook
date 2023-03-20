@@ -132,7 +132,7 @@
         // Get the current email item
         var item = Office.context.mailbox.item;
 
-       
+
 
         const form = document.getElementById("apikey-form");
         form.addEventListener("submit", (event) => {
@@ -142,6 +142,7 @@
                 apiKey = getCookie("apiKey");
             }
 
+            let userEmailContent; // define userEmailContent variable
 
             const systemInstructions = document
                 .getElementById("instructions-content")
@@ -149,14 +150,14 @@
 // Get the body of the email as plain text
             item.body.getAsync(Office.CoercionType.Text, function (result) {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    const userEmailContent = result.value;
+                    userEmailContent = result.value; // set userEmailContent inside callback function
                     // Use userEmailContent variable here
                 } else {
                     console.error(result.error.message);
                 }
             });
-            
-            
+
+
             const payload = {
                 messages: [
                     { role: "system", content: systemInstructions },
