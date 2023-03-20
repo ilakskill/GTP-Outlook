@@ -128,7 +128,7 @@
       type="text/javascript"
     ></script>
     <script type="text/javascript">
-     Office.onReady(function () {
+    Office.onReady(function () {
   // Get the currently selected item in the Windows client of Outlook
   var item = Office.context.mailbox.item;
 
@@ -153,69 +153,57 @@
         // Retrieve the selected text from the email message
         var selectedText = result.value;
 
-        // Highlight the selected text
-        item.body.setSelectedDataAsync(
-          "<span style='background-color: #ffff00'>" + selectedText + "</span>",
-          { coercionType: Office.CoercionType.Html },
-          function (result) {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-              // Do something with the highlighted text
-              console.log("Selected text highlighted.");
+        // Do something with the selected text
+        console.log(selectedText);
 
-              const payload = {
-                messages: [
-                  { role: "system", content: systemInstructions },
-                  { role: "user", content: selectedText },
-                ],
-                model: "gpt-3.5-turbo",
-                max_tokens: 2048,
-                temperature: 0.7,
-                n: 1,
-                stream: false,
-              };
+        const payload = {
+          messages: [
+            { role: "system", content: systemInstructions },
+            { role: "user", content: selectedText },
+          ],
+          model: "gpt-3.5-turbo",
+          max_tokens: 2048,
+          temperature: 0.7,
+          n: 1,
+          stream: false,
+        };
 
-              const url = "https://api.openai.com/v1/chat/completions";
-              const headers = {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + apiKey,
-              };
+        const url = "https://api.openai.com/v1/chat/completions";
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + apiKey,
+        };
 
-              fetch(url, {
-                method: "POST",
-                headers,
-                body: JSON.stringify(payload),
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  const assistantMessage = data.choices[0].message.content;
-                  //const assistantMessage = emailDocument;
+        fetch(url, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(payload),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const assistantMessage = data.choices[0].message.content;
 
-                  const responseDiv = document.getElementById("response");
+            const responseDiv = document.getElementById("response");
 
-                  const messageHTML = `
-                    <div>
-                      <div>Assistant:</div>
-                      <div>${assistantMessage}</div>
-                    </div>
-                  `;
+            const messageHTML = `
+              <div>
+                <div>Assistant:</div>
+                <div>${assistantMessage}</div>
+              </div>
+            `;
 
-                  responseDiv.innerHTML = messageHTML;
+            responseDiv.innerHTML = messageHTML;
 
-                  // Set the cookie expiration to 30 days from now
-                  const daysUntilExpiration = 30;
-                  const expirationDate = new Date();
-                  expirationDate.setDate(
-                    expirationDate.getDate() + daysUntilExpiration
-                  );
+            // Set the cookie expiration to 30 days from now
+            const daysUntilExpiration = 30;
+            const expirationDate = new Date();
+            expirationDate.setDate(
+              expirationDate.getDate() + daysUntilExpiration
+            );
 
-                  document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
-                })
-                .catch((error) => console.error(error));
-            } else {
-              console.error(result.error.message);
-            }
-          }
-        );
+            document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
+          })
+          .catch((error) => console.error(error));
       } else {
         console.error(result.error.message);
       }
@@ -231,18 +219,18 @@
   // Get the stored API key from the cookie
   const apiKey = getCookie("apiKey");
 
-        // If an API key is found in the cookie, set it as the default value of the API key text field
-        if (apiKey) {
-          // Set the API key input field value to the stored API key
-          document.getElementById("apikey").value = apiKey;
+  // If an API key is found in the cookie, set it as the default value of the API key text field
+  if (apiKey) {
+    // Set the API key input field value to the stored API key
+    document.getElementById("apikey").value = apiKey;
 
-          // Hide the API key input field
-          document
-            .getElementById("apikey")
-            .closest("div")
-            .setAttribute("style", "display: none");
-        }
-      });
+    // Hide the API key input field
+    document
+      .getElementById("apikey")
+      .closest("div")
+      .setAttribute("style", "display: none");
+  }
+});
     </script>
   </body>
 </html>
