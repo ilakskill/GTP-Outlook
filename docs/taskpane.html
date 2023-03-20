@@ -144,8 +144,6 @@
             if (result.status === Office.AsyncResultStatus.Succeeded) {
                 // The plain text body of the email is in result.value
                 console.log(result.value);
-
-                const userEmailContent=result.value;
             } else {
                 console.error(result.error.message);
             }
@@ -158,9 +156,8 @@
             if (!apiKey) {
                 apiKey = getCookie("apiKey");
             }
-            // const userEmailContent = document
-            //     .getElementById("user-email-content")
-            //     .value.trim();
+            const userEmailContent = result.value.trim();
+
 
             const systemInstructions = document
                 .getElementById("instructions-content")
@@ -168,8 +165,8 @@
 
             const payload = {
                 messages: [
-                    {role: "system", content: systemInstructions,},
-                    {role: "user", content: userEmailContent},
+                    { role: "system", content: systemInstructions },
+                    { role: "user", content: userEmailContent },
                 ],
                 // todo: make this a dropdown option above
                 model: "gpt-3.5-turbo",
@@ -199,9 +196,9 @@
                     const responseDiv = document.getElementById("response");
 
                     const messageHTML = `
-          <div style="background-color: #F2F2F2; padding: 20px; border: 1px solid #E6E6E6;">
-            <div style="color: #707070; font-size: 12px; margin-bottom: 10px;">Assistant:</div>
-            <div style="padding: 10px; font-size: 16px; line-height: 1.5; background-color: #FFFFFF; border: 1px solid #E6E6E6; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">${assistantMessage}</div>
+          <div>
+            <div>Assistant:</div>
+            <div>${assistantMessage}</div>
           </div>
         `;
 
@@ -213,7 +210,9 @@
                     // Set the cookie expiration to 30 days from now
                     const daysUntilExpiration = 30;
                     const expirationDate = new Date();
-                    expirationDate.setDate(expirationDate.getDate() + daysUntilExpiration);
+                    expirationDate.setDate(
+                        expirationDate.getDate() + daysUntilExpiration
+                    );
 
                     document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
                 })
@@ -229,9 +228,13 @@
         // Get the stored API key from the cookie
         const apiKey = getCookie("apiKey");
 
-// If an API key is found in the cookie, set it as the default value of the API key text field
+        // If an API key is found in the cookie, set it as the default value of the API key text field
         if (apiKey) {
+            // Set the API key input field value to the stored API key
             document.getElementById("apikey").value = apiKey;
+
+            // Hide the API key input field
+            document.getElementById("apikey").parentElement.style.display = "none";
         }
     });
 
