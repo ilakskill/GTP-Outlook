@@ -1,252 +1,256 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>GPT Email Helper</title>
     <style>
-        body {
-            background-color: #f7f7f7;
-            font-family: Arial, sans-serif;
-        }
+      body {
+          background-color: #f7f7f7;
+          font-family: Arial, sans-serif;
+      }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin: 1rem;
-            padding: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 0.5rem;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      form {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin: 1rem;
+          padding: 1rem;
+          border: 1px solid #ddd;
+          border-radius: 0.5rem;
+          background-color: #fff;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
 
-        label {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
+      label {
+          font-weight: bold;
+          font-size: 1.1rem;
+          color: #333;
+          margin-bottom: 0.5rem;
+      }
 
-        input,
-        textarea,
-        select {
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-            color: #333;
-            background-color: #fff;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease-in-out;
-        }
+      input,
+      textarea,
+      select {
+          padding: 0.5rem;
+          border-radius: 0.25rem;
+          border: 1px solid #ccc;
+          font-size: 1rem;
+          color: #333;
+          background-color: #fff;
+          box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+          transition: all 0.2s ease-in-out;
+      }
 
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border: 1px solid #0078d4;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 120, 212, 0.5);
-        }
+      input:focus,
+      textarea:focus,
+      select:focus {
+          outline: none;
+          border: 1px solid #0078d4;
+          box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 120, 212, 0.5);
+      }
 
-        button {
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            background-color: #0078d4;
-            color: #fff;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-        }
+      button {
+          padding: 0.5rem;
+          border-radius: 0.25rem;
+          background-color: #0078d4;
+          color: #fff;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+      }
 
-        button:hover {
-            background-color: #005a9e;
-        }
+      button:hover {
+          background-color: #005a9e;
+      }
 
-        hr {
-            margin: 2rem 0;
-            border: none;
-            border-top: 1px solid #ddd;
-        }
+      hr {
+          margin: 2rem 0;
+          border: none;
+          border-top: 1px solid #ddd;
+      }
 
-        .response {
-            background-color: #f2f2f2;
-            padding: 20px;
-            border: 1px solid #e6e6e6;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
-        }
+      .response {
+          background-color: #f2f2f2;
+          padding: 20px;
+          border: 1px solid #e6e6e6;
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          margin-top: 2rem;
+      }
 
-        .response__role {
-            color: #707070;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
+      .response__role {
+          color: #707070;
+          font-size: 12px;
+          margin-bottom: 10px;
+      }
 
-        .response__content {
-            padding: 10px;
-            font-size: 16px;
-            line-height: 1.5;
-            background-color: #fff;
-            border: 1px solid #e6e6e6;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      .response__content {
+          padding: 10px;
+          font-size: 16px;
+          line-height: 1.5;
+          background-color: #fff;
+          border: 1px solid #e6e6e6;
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <form id="apikey-form">
+      <div>
+        <label for="apikey">API Key:</label>
         <div>
-            <label for="apikey">API Key:</label>
-            <div>
-                <input id="apikey" name="apikey" required type="text" />
-            </div>
+          <input id="apikey" name="apikey" required type="text" />
         </div>
+      </div>
 
+      <div>
+        <label for="instructions-content">Instructions</label>
         <div>
-            <label for="instructions-content">Instructions</label>
-            <div>
-                <input id="instructions-content" name="instructions-content" required type="text" />
-            </div>
+          <input
+            id="instructions-content"
+            name="instructions-content"
+            required
+            type="text"
+          />
         </div>
+      </div>
 
-        <button type="submit">Submit</button>
+      <button type="submit">Submit</button>
     </form>
 
     <hr />
     <div id="response"></div>
 
-    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+    <script
+      src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"
+      type="text/javascript"
+    ></script>
     <script type="text/javascript">
-        Office.onReady(function () {
-            // Get the current email item
-            var item = Office.context.mailbox.item;
+      Office.onReady(function () {
+        // Get the current email item
+        var item = Office.context.mailbox.item;
 
-            
+        const form = document.getElementById("apikey-form");
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          let apiKey = document.getElementById("apikey").value.trim();
+          if (!apiKey) {
+            apiKey = getCookie("apiKey");
+          }
+          let userEmailContent = document
+            .getElementById("instructions-content")
+            .value.trim(); // define userEmailContent variable
 
-            const form = document.getElementById("apikey-form");
-            form.addEventListener("submit", (event) => {
-                event.preventDefault();
-                let apiKey = document.getElementById("apikey").value.trim();
-                if (!apiKey) {
-                    apiKey = getCookie("apiKey");
-                }
-                let userEmailContent =document.getElementById("instructions-content").value.trim();; // define userEmailContent variable
-
-                const systemInstructions = document
-                    .getElementById("instructions-content")
-                    .value.trim();
-                // Get the body of the email as plain text
-                item.body.getAsync(Office.CoercionType.Html, function (result) {
-                    if (result.status === Office.AsyncResultStatus.Succeeded) {
-                        const userEmailHTML = result.value;
+          const systemInstructions = document
+            .getElementById("instructions-content")
+            .value.trim();
 
 
-                        const parser = new DOMParser();
-                        const emailDocument = parser.parseFromString(
-    userEmailHTML,
-    "text/html"
-);
-const emailBody = emailDocument.querySelector("body");
-const emailElements = emailBody.querySelectorAll(".emailReply");
+          // Get the body of the email as plain text
+          item.body.getAsync(Office.CoercionType.Html, function (result) {
+            if (result.status === Office.AsyncResultStatus.Succeeded) {
+              const userEmailHTML = result.value;
 
-// Create an array to store the email contents
-const userEmailContents = [];
+              const parser = new DOMParser();
+              const emailDocument = parser.parseFromString(
+                userEmailHTML,
+                "text/html"
+              );
+              const emailBody = emailDocument.querySelector("body");
+              const emailElements = emailBody.querySelectorAll(".emailReply");
 
-// Loop through each email element and extract its content
-emailElements.forEach((emailElement) => {
-    const emailContent = emailElement.innerText.trim();
-    userEmailContents.push(emailContent);
-});
+              // Create an array to store the email contents
+              const userEmailContents = [];
 
-console.log(userEmailContents);
+              // Loop through each email element and extract its content
+              emailElements.forEach((emailElement) => {
+                const emailContent = emailElement.innerText.trim();
+                userEmailContents.push(emailContent);
+              });
 
+              console.log(userEmailContents);
 
-                        const payload = {
-                            messages: [
-                                { role: "system", content: systemInstructions },
-                                { role: "user", content: userEmailContent },
-                            ],
-                            // todo: make this a dropdown option above
-                            model: "gpt-3.5-turbo",
-                            // todo: make this a input option above
-                            max_tokens: 2048,
-                            // todo: make this a dropdown option above
-                            temperature: 0.7,
-                            // todo: make this a dropdown option above
-                            n: 1,
-                            stream: false,
-                        };
+              const payload = {
+                messages: [
+                  { role: "system", content: systemInstructions },
+                  { role: "user", content: userEmailContent },
+                ],
+                model: "gpt-3.5-turbo",
+                max_tokens: 2048,
+                temperature: 0.7,
+                n: 1,
+                stream: false,
+              };
 
-                        const url = "https://api.openai.com/v1/chat/completions";
-                        const headers = {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + apiKey,
-                        };
+              const url = "https://api.openai.com/v1/chat/completions";
+              const headers = {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + apiKey,
+              };
 
-                        fetch(url, {
-                            method: "POST",
-                            headers,
-                            body: JSON.stringify(payload),
-                        })
-                            .then((response) => response.json())
-                            .then((data) => {
-                                const assistantMessage = data.choices[0].message.content;
-                                const responseDiv = document.getElementById("response");
+              fetch(url, {
+                method: "POST",
+                headers,
+                body: JSON.stringify(payload),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  //const assistantMessage = data.choices[0].message.content;
+                  const assistantMessage = userEmailContents;
 
-                                const messageHTML = `
+                  const responseDiv = document.getElementById("response");
+
+                  const messageHTML = `
           <div>
             <div>Assistant:</div>
             <div>${assistantMessage}</div>
           </div>
         `;
 
-                                responseDiv.innerHTML = messageHTML;
+                  responseDiv.innerHTML = messageHTML;
 
-                                // the orginal is below
-                                //document.cookie = `apiKey=${apiKey}`;
+                  // the orginal is below
+                  //document.cookie = `apiKey=${apiKey}`;
 
-                                // Set the cookie expiration to 30 days from now
-                                const daysUntilExpiration = 30;
-                                const expirationDate = new Date();
-                                expirationDate.setDate(
-                                    expirationDate.getDate() + daysUntilExpiration
-                                );
+                  // Set the cookie expiration to 30 days from now
+                  const daysUntilExpiration = 30;
+                  const expirationDate = new Date();
+                  expirationDate.setDate(
+                    expirationDate.getDate() + daysUntilExpiration
+                  );
 
-                                document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
-                            })
-                            .catch((error) => console.error(error));
-                    } else {
-                        console.error(result.error.message);
-                    }
-                });
-            });
-
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(";").shift();
+                  document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
+                })
+                .catch((error) => console.error(error));
+            } else {
+              console.error(result.error.message);
             }
-
-            // Get the stored API key from the cookie
-            const apiKey = getCookie("apiKey");
-
-            // If an API key is found in the cookie, set it as the default value of the API key text field
-            if (apiKey) {
-                // Set the API key input field value to the stored API key
-                document.getElementById("apikey").value = apiKey;
-
-                // Hide the API key input field
-                document
-                    .getElementById("apikey")
-                    .closest("div")
-                    .setAttribute("style", "display: none");
-            }
+          });
         });
-    </script>
-</body>
 
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+
+        // Get the stored API key from the cookie
+        const apiKey = getCookie("apiKey");
+
+        // If an API key is found in the cookie, set it as the default value of the API key text field
+        if (apiKey) {
+          // Set the API key input field value to the stored API key
+          document.getElementById("apikey").value = apiKey;
+
+          // Hide the API key input field
+          document
+            .getElementById("apikey")
+            .closest("div")
+            .setAttribute("style", "display: none");
+        }
+      });
+    </script>
+  </body>
 </html>
