@@ -222,6 +222,14 @@
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(";").shift();
         }
+
+        // Get the stored API key from the cookie
+        const apiKey = getCookie("apiKey");
+
+// If an API key is found in the cookie, set it as the default value of the API key text field
+        if (apiKey) {
+            document.getElementById("apikey").value = apiKey;
+        }
     });
 
 
