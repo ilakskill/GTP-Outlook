@@ -128,38 +128,39 @@
       type="text/javascript"
     ></script>
     <script type="text/javascript">
-      Office.onReady(function () {
-        // Get the current email item
-        var item = Office.context.mailbox.item;
+     Office.onReady(function () {
+  // Get the currently selected item in the Windows client of Outlook
+  var item = Office.context.mailbox.item;
 
-        const form = document.getElementById("apikey-form");
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
-          let apiKey = document.getElementById("apikey").value.trim();
-          if (!apiKey) {
-            apiKey = getCookie("apiKey");
-          }
-          let userEmailContent = document
-            .getElementById("instructions-content")
-            .value.trim(); // define userEmailContent variable
+  const form = document.getElementById("apikey-form");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    let apiKey = document.getElementById("apikey").value.trim();
+    if (!apiKey) {
+      apiKey = getCookie("apiKey");
+    }
+    let userEmailContent = document
+      .getElementById("instructions-content")
+      .value.trim(); // define userEmailContent variable
 
-          const systemInstructions = document
-            .getElementById("instructions-content")
-            .value.trim();
+    const systemInstructions = document
+      .getElementById("instructions-content")
+      .value.trim();
 
-
-          // Get the body of the email as plain text
-         // Get the currently selected item in the Windows client of Outlook
-var item = Office.context.mailbox.item;
-
-// Get the selected text from the email message
-var selectedText = item.getSelectedDataAsync("text", function(result) {
-    if (result.status === Office.AsyncResultStatus.Succeeded) {
+    // Get the selected text from the email message
+    item.getSelectedDataAsync("text", function (result) {
+      if (result.status === Office.AsyncResultStatus.Succeeded) {
         // Retrieve the selected text from the email message
         var selectedText = result.value;
 
-        // Do something with the selected text
-        console.log(selectedText);
+        // Highlight the selected text
+        item.body.setSelectedDataAsync(
+          "<span style='background-color: #ffff00'>" + selectedText + "</span>",
+          { coercionType: Office.CoercionType.Html },
+          function (result) {
+            if (result.status === Office.AsyncResultStatus.Succeeded) {
+              // Do something with the highlighted text
+              console.log("Selected text highlighted.");
 
               const payload = {
                 messages: [
@@ -192,16 +193,13 @@ var selectedText = item.getSelectedDataAsync("text", function(result) {
                   const responseDiv = document.getElementById("response");
 
                   const messageHTML = `
-          <div>
-            <div>Assistant:</div>
-            <div>${assistantMessage}</div>
-          </div>
-        `;
+                    <div>
+                      <div>Assistant:</div>
+                      <div>${assistantMessage}</div>
+                    </div>
+                  `;
 
                   responseDiv.innerHTML = messageHTML;
-
-                  // the orginal is below
-                  //document.cookie = `apiKey=${apiKey}`;
 
                   // Set the cookie expiration to 30 days from now
                   const daysUntilExpiration = 30;
@@ -216,17 +214,22 @@ var selectedText = item.getSelectedDataAsync("text", function(result) {
             } else {
               console.error(result.error.message);
             }
-          });
-        });
+          }
+        );
+      } else {
+        console.error(result.error.message);
+      }
+    });
+  });
 
-        function getCookie(name) {
-          const value = `; ${document.cookie}`;
-          const parts = value.split(`; ${name}=`);
-          if (parts.length === 2) return parts.pop().split(";").shift();
-        }
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
 
-        // Get the stored API key from the cookie
-        const apiKey = getCookie("apiKey");
+  // Get the stored API key from the cookie
+  const apiKey = getCookie("apiKey");
 
         // If an API key is found in the cookie, set it as the default value of the API key text field
         if (apiKey) {
