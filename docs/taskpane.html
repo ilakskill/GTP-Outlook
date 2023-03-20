@@ -147,7 +147,9 @@
           // Get the body of the email as plain text
           item.body.getAsync(Office.CoercionType.Text, function (result) {
             if (result.status === Office.AsyncResultStatus.Succeeded) {
-              userEmailContent = result.value; // set userEmailContent inside callback function
+              //userEmailContent = result.value; // set userEmailContent inside callback function
+              userEmailContent = result.value.replace(/(?:https?|ftp):\/\/[\n\S]+/g, ''); // Remove any links from the email body
+
               // Use userEmailContent variable here
 
               const payload = {
