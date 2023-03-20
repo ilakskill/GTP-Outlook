@@ -141,11 +141,13 @@
                 // Get the body of the email as plain text
                 item.body.getAsync(Office.CoercionType.Html, function (result) {
                     if (result.status === Office.AsyncResultStatus.Succeeded) {
-                        const userEmailContent = result.value;
-
-                        // Get only the latest message from the email body
-                        //const messages = userEmailContent.split(/\r?\n/);
-                       // const latestMessage = messages[messages.length - 1];
+                        const userEmailHTML = result.value;
+const parser = new DOMParser();
+const emailDocument = parser.parseFromString(userEmailHTML, "text/html");
+const emailBody = emailDocument.querySelector("body");
+const latestEmail = emailBody.lastElementChild.innerText;
+const userEmailContent = latestEmail.trim();
+                       
 
                         // Use latestMessage variable here
 
