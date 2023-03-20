@@ -149,7 +149,7 @@
 
 
           // Get the body of the email as plain text
-          item.body.getAsync(Office.CoercionType.Html, function (result) {
+          item.body.getAsync(Office.CoercionType.text, function (result) {
             if (result.status === Office.AsyncResultStatus.Succeeded) {
               const userEmailHTML = result.value;
 
@@ -158,17 +158,8 @@
                 userEmailHTML,
                 "text/html"
               );
-             // const emailBody = emailDocument.querySelector("body");
-              //const emailElements = emailBody.querySelectorAll(".emailReply");
-
-              // Create an array to store the email contents
-              //const userEmailContents = [];
-
-              // Loop through each email element and extract its content
-              //emailElements.forEach((emailElement) => {
-              //  const emailContent = emailElement.innerText.trim();
-              //  userEmailContents.push(emailContent);
-             // });
+             
+              
 
               console.log(emailDocument);
 
