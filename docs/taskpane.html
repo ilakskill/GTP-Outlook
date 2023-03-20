@@ -150,29 +150,34 @@
 // Get the body of the email as plain text
             item.body.getAsync(Office.CoercionType.Text, function (result) {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
+
                     userEmailContent = result.value; // set userEmailContent inside callback function
                     // Use userEmailContent variable here
+
+                    const payload = {
+                        messages: [
+                            { role: "system", content: systemInstructions },
+                            { role: "user", content: userEmailContent  }
+                        ],
+                        // todo: make this a dropdown option above
+                        model: "gpt-3.5-turbo",
+                        // todo: make this a input option above
+                        max_tokens: 2048,
+                        // todo: make this a dropdown option above
+                        temperature: 0.7,
+                        // todo: make this a dropdown option above
+                        n: 1,
+                        stream: false,
+                    };
+
+
                 } else {
                     console.error(result.error.message);
                 }
             });
 
 
-            const payload = {
-                messages: [
-                    { role: "system", content: systemInstructions },
-                    { role: "user", content: userEmailContent  }
-                ],
-                // todo: make this a dropdown option above
-                model: "gpt-3.5-turbo",
-                // todo: make this a input option above
-                max_tokens: 2048,
-                // todo: make this a dropdown option above
-                temperature: 0.7,
-                // todo: make this a dropdown option above
-                n: 1,
-                stream: false,
-            };
+
 
             const url = "https://api.openai.com/v1/chat/completions";
             const headers = {
