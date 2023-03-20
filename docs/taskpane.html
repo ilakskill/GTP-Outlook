@@ -152,6 +152,7 @@
       if (result.status === Office.AsyncResultStatus.Succeeded) {
         // Retrieve the selected text from the email message
         var selectedText = result.value;
+        selectedText = JSON.stringify(selectedText);
 
         
         // Do something with the selected text
