@@ -108,12 +108,11 @@
       <div>
         <label for="instructions-content">Instructions</label>
         <div>
-          <input
+          <textarea
             id="instructions-content"
             name="instructions-content"
             required
-            type="text"
-          />
+          ></textarea>
         </div>
       </div>
 
@@ -152,7 +151,7 @@
           // Get the selected text from the email message
           item.getSelectedDataAsync("text", function (result) {
             if (result.status === Office.AsyncResultStatus.Succeeded) {
-                
+
               // Retrieve the selected text from the email message
               var selectedText = result.value;
               selectedText = JSON.stringify(selectedText);
