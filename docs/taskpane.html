@@ -139,15 +139,7 @@
         // Get the current email item
         var item = Office.context.mailbox.item;
 
-        // Get the body of the email as plain text
-        item.getSelectedDataAsync(Office.CoercionType.Text, function (result) {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-                // The plain text body of the email is in result.value
-                console.log(result.value);
-            } else {
-                console.error(result.error.message);
-            }
-        });
+       
 
         const form = document.getElementById("apikey-form");
         form.addEventListener("submit", (event) => {
@@ -156,17 +148,26 @@
             if (!apiKey) {
                 apiKey = getCookie("apiKey");
             }
-            const userEmailContent = result.value.trim();
 
 
             const systemInstructions = document
                 .getElementById("instructions-content")
                 .value.trim();
-
+// Get the body of the email as plain text
+            item.body.getAsync(Office.CoercionType.Text, function (result) {
+                if (result.status === Office.AsyncResultStatus.Succeeded) {
+                    const userEmailContent = result.value;
+                    // Use userEmailContent variable here
+                } else {
+                    console.error(result.error.message);
+                }
+            });
+            
+            
             const payload = {
                 messages: [
                     { role: "system", content: systemInstructions },
-                    { role: "user", content: userEmailContent },
+                    { role: "user", content: userEmailContent  },
                 ],
                 // todo: make this a dropdown option above
                 model: "gpt-3.5-turbo",
