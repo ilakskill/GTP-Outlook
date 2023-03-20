@@ -147,13 +147,22 @@
 
                         const parser = new DOMParser();
                         const emailDocument = parser.parseFromString(
-                            userEmailHTML,
-                            "text/html"
-                        );
-                        const emailBody = emailDocument.querySelector("body");
-                        const latestEmail = emailBody.lastElementChild.innerText;
-                        const userEmailContent = latestEmail.trim();
-                        console.log(userEmailContent);
+    userEmailHTML,
+    "text/html"
+);
+const emailBody = emailDocument.querySelector("body");
+const emailElements = emailBody.querySelectorAll(".emailReply");
+
+// Create an array to store the email contents
+const userEmailContents = [];
+
+// Loop through each email element and extract its content
+emailElements.forEach((emailElement) => {
+    const emailContent = emailElement.innerText.trim();
+    userEmailContents.push(emailContent);
+});
+
+console.log(userEmailContents);
 
 
                         const payload = {
