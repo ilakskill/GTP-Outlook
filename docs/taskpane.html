@@ -158,19 +158,19 @@
                 userEmailHTML,
                 "text/html"
               );
-              const emailBody = emailDocument.querySelector("body");
-              const emailElements = emailBody.querySelectorAll(".emailReply");
+             // const emailBody = emailDocument.querySelector("body");
+              //const emailElements = emailBody.querySelectorAll(".emailReply");
 
               // Create an array to store the email contents
-              const userEmailContents = [];
+              //const userEmailContents = [];
 
               // Loop through each email element and extract its content
-              emailElements.forEach((emailElement) => {
-                const emailContent = emailElement.innerText.trim();
-                userEmailContents.push(emailContent);
-              });
+              //emailElements.forEach((emailElement) => {
+              //  const emailContent = emailElement.innerText.trim();
+              //  userEmailContents.push(emailContent);
+             // });
 
-              console.log(userEmailContents);
+              console.log(emailDocument);
 
               const payload = {
                 messages: [
@@ -198,7 +198,7 @@
                 .then((response) => response.json())
                 .then((data) => {
                   //const assistantMessage = data.choices[0].message.content;
-                  const assistantMessage = userEmailContents;
+                  const assistantMessage = emailDocument;
 
                   const responseDiv = document.getElementById("response");
 
