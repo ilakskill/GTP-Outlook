@@ -99,6 +99,7 @@
 
 
 <form id="apikey-form">
+
     <div>
         <label for="apikey">API Key:</label>
         <div>
@@ -118,11 +119,7 @@
         <label for="user-email-content">Email Body:</label>
         <div>
             <textarea id="user-email-content" name="user-email-content"></textarea>
-
-            <script>
-                document.getElementById("user-email-content").value = "${result.value}";
-            </script>
-            <div>
+                     <div>
                 <button type="submit">Submit</button>
             </div>
         </div>
@@ -161,9 +158,9 @@
             if (!apiKey) {
                 apiKey = getCookie("apiKey");
             }
-            const userEmailContent = document
-                .getElementById("user-email-content")
-                .value.trim();
+            // const userEmailContent = document
+            //     .getElementById("user-email-content")
+            //     .value.trim();
 
             const systemInstructions = document
                 .getElementById("instructions-content")
