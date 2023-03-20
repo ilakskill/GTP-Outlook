@@ -151,9 +151,9 @@
     item.getSelectedDataAsync("text", function (result) {
       if (result.status === Office.AsyncResultStatus.Succeeded) {
         // Retrieve the selected text from the email message
-        var selectedText = JSON.parse(result.value);
-       // selectedText = JSON.parse(selectedText);
+        var selectedText = result.value;
 
+        
         // Do something with the selected text
         console.log(selectedText);
 
