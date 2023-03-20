@@ -142,12 +142,15 @@
                 item.body.getAsync(Office.CoercionType.Html, function (result) {
                     if (result.status === Office.AsyncResultStatus.Succeeded) {
                         const userEmailHTML = result.value;
-const parser = new DOMParser();
-const emailDocument = parser.parseFromString(userEmailHTML, "text/html");
-const emailBody = emailDocument.querySelector("body");
-const latestEmail = emailBody.lastElementChild.innerText;
-const userEmailContent = latestEmail.trim();
-                       
+                        const parser = new DOMParser();
+                        const emailDocument = parser.parseFromString(
+                            userEmailHTML,
+                            "text/html"
+                        );
+                        const emailBody = emailDocument.querySelector("body");
+                        const latestEmail = emailBody.lastElementChild.innerText;
+                        const userEmailContent = latestEmail.trim();
+                        console.log(userEmailContent);
 
                         // Use latestMessage variable here
 
