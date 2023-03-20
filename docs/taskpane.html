@@ -125,6 +125,8 @@
             // Get the current email item
             var item = Office.context.mailbox.item;
 
+            
+
             const form = document.getElementById("apikey-form");
             form.addEventListener("submit", (event) => {
                 event.preventDefault();
@@ -132,36 +134,40 @@
                 if (!apiKey) {
                     apiKey = getCookie("apiKey");
                 }
-                let userEmailContent = document
-                    .getElementById("instructions-content")
-                    .value.trim(); // define userEmailContent variable
+                let userEmailContent =document.getElementById("instructions-content").value.trim();; // define userEmailContent variable
 
                 const systemInstructions = document
                     .getElementById("instructions-content")
                     .value.trim();
-
                 // Get the body of the email as plain text
                 item.body.getAsync(Office.CoercionType.Html, function (result) {
                     if (result.status === Office.AsyncResultStatus.Succeeded) {
                         const userEmailHTML = result.value;
 
-                        const parser = new DOMParser();
-                        const emailDocument = parser.parseFromString(userEmailHTML, "text/html");
-const emailBody = emailDocument.querySelector("body");
-const messageToReply = emailBody.querySelector(".emailReply").innerText.trim();
-const userEmailContent = messageToReply;
 
+                        const parser = new DOMParser();
+                        const emailDocument = parser.parseFromString(
+                            userEmailHTML,
+                            "text/html"
+                        );
+                        const emailBody = emailDocument.querySelector("body");
+                        const latestEmail = emailBody.lastElementChild.innerText;
+                        const userEmailContent = latestEmail.trim();
                         console.log(userEmailContent);
+
 
                         const payload = {
                             messages: [
-                                // { role: "system", content: systemInstructions },
-                                { role: "system", content: "Respond to this email" },
+                                { role: "system", content: systemInstructions },
                                 { role: "user", content: userEmailContent },
                             ],
+                            // todo: make this a dropdown option above
                             model: "gpt-3.5-turbo",
+                            // todo: make this a input option above
                             max_tokens: 2048,
+                            // todo: make this a dropdown option above
                             temperature: 0.7,
+                            // todo: make this a dropdown option above
                             n: 1,
                             stream: false,
                         };
