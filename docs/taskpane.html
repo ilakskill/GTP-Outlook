@@ -182,7 +182,7 @@
                     })
                         .then((response) => response.json())
                         .then((data) => {
-                            const assistantMessage = data.choices[0].text;
+                            const assistantMessage = data.choices[0].message.content;
                             const responseDiv = document.getElementById("response");
 
                             const messageHTML = `
@@ -236,7 +236,7 @@
     });
 
 
-    
+
 
 </script>
 </body>
