@@ -145,27 +145,31 @@
             .getElementById("instructions-content")
             .value.trim();
           // Get the body of the email as plain text
-          item.body.getAsync(Office.CoercionType.Text, function (result) {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-              //userEmailContent = result.value; // set userEmailContent inside callback function
-              userEmailContent = result.value.replace(/(?:https?|ftp):\/\/[\n\S]+/g, ''); // Remove any links from the email body
+         // Get the body of the email as plain text
+item.body.getAsync(Office.CoercionType.Text, function (result) {
+  if (result.status === Office.AsyncResultStatus.Succeeded) {
+    const userEmailContent = result.value;
 
-              // Use userEmailContent variable here
+    // Get only the latest message from the email body
+    const messages = userEmailContent.split(/\r?\n/);
+    const latestMessage = messages[messages.length - 1];
 
-              const payload = {
-                messages: [
-                  { role: "system", content: systemInstructions },
-                  { role: "user", content: userEmailContent },
-                ],
-                // todo: make this a dropdown option above
-                model: "gpt-3.5-turbo",
-                // todo: make this a input option above
-                max_tokens: 4096,
-                // todo: make this a dropdown option above
-                temperature: 0.7,
-                // todo: make this a dropdown option above
-                top_p: 1,
-                stream: false,
+    // Use latestMessage variable here
+
+    const payload = {
+      messages: [
+        { role: "system", content: systemInstructions },
+        { role: "user", content: latestMessage }
+      ],
+      // todo: make this a dropdown option above
+      model: "davinci",
+      // todo: make this a input option above
+      max_tokens: 2048,
+      // todo: make this a dropdown option above
+      temperature: 0.7,
+      // todo: make this a dropdown option above
+      n: 1,
+      stream: false,
               };
 
               const url = "https://api.openai.com/v1/chat/completions";
