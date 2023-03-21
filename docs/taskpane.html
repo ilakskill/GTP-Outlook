@@ -106,12 +106,18 @@
       </div>
 
       <div>
+        <label for="mainPrompts">Main Prompts</label>
+        <div>
+          <input id="mainPrompts" name="mainPrompts" required type="text" />
+        </div>
+      </div>
+
+      <div>
         <label for="instructions-content">Instructions</label>
         <div>
           <textarea
             id="instructions-content"
             name="instructions-content"
-            required
           ></textarea>
         </div>
       </div>
@@ -128,21 +134,26 @@
     ></script>
     <script type="text/javascript">
       Office.onReady(function () {
-
         // Get the currently selected item in the Windows client of Outlook
         var item = Office.context.mailbox.item;
 
         const form = document.getElementById("apikey-form");
+
         form.addEventListener("submit", (event) => {
           event.preventDefault();
-          let apiKey = document.getElementById("apikey").value.trim();
-          if (!apiKey) {
-            apiKey = getCookie("apiKey");
-          }
+
           
-          let userEmailContent = document
-            .getElementById("instructions-content")
-            .value.trim(); // define userEmailContent variable
+          let apiKey = document.getElementById("apikey").value.trim();
+
+          if (!apiKey) {apiKey = getCookie("apiKey");
+          }
+
+          // i dont think this is used
+          //let userEmailContent = document.getElementById("instructions-content").value.trim();
+
+          const mainPrompts = document
+            .getElementById("mainPrompts")
+            .value.trim();
 
           const systemInstructions = document
             .getElementById("instructions-content")
@@ -151,9 +162,9 @@
           // Get the selected text from the email message
           item.getSelectedDataAsync("text", function (result) {
             if (result.status === Office.AsyncResultStatus.Succeeded) {
-
               // Retrieve the selected text from the email message
               var selectedText = result.value;
+
               selectedText = JSON.stringify(selectedText);
 
               // Do something with the selected text
@@ -161,7 +172,7 @@
 
               const payload = {
                 messages: [
-                  { role: "system", content: systemInstructions },
+                  { role: "system", content: mainPrompts += systemInstructions },
                   { role: "user", content: selectedText },
                 ],
                 model: "gpt-3.5-turbo",
