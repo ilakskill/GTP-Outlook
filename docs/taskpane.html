@@ -96,9 +96,31 @@
     </style>
   </head>
 
- <body>
+<body>
   <form id="apikey-form">
-    <!-- ...existing form elements... -->
+    <div>
+      <label for="apikey">API Key:</label>
+      <input id="apikey" name="apikey" type="text" required />
+    </div>
+
+    <div>
+      <label for="mainPrompts">Main Prompts</label>
+      <div>
+        <input id="mainPrompts" name="mainPrompts" required type="text" />
+      </div>
+    </div>
+
+    <div>
+      <label for="instructions-content">Instructions</label>
+      <div>
+        <textarea
+          id="instructions-content"
+          name="instructions-content"
+        ></textarea>
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
   </form>
 
   <hr />
@@ -119,46 +141,113 @@
     }
 
     Office.onReady(function () {
-      // ...existing Office.onReady code...
+      // Get the currently selected item in the Windows client of Outlook
+      var item = Office.context.mailbox.item;
+
+      const form = document.getElementById("apikey-form");
 
       form.addEventListener("submit", (event) => {
-        // ...existing form event listener code...
+        event.preventDefault();
 
+        let apiKey = document.getElementById("apikey").value.trim();
+
+        if (!apiKey) {
+          apiKey = getCookie("apiKey");
+        }
+
+        let mainPrompts = document
+          .getElementById("mainPrompts")
+          .value.trim();
+
+        let systemInstructions = document
+          .getElementById("instructions-content")
+          .value.trim();
+
+        // Get the selected text from the email message
         item.getSelectedDataAsync("text", function (result) {
-          // ...existing getSelectedDataAsync code...
+          if (result.status === Office.AsyncResultStatus.Succeeded) {
+            // Retrieve the selected text from the email message
+            var selectedText = result.value;
 
-          fetch(url, {
-            method: "POST",
-            headers,
-            body: JSON.stringify(payload),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              const assistantMessage = data.choices[0].message.content;
+            selectedText = JSON.stringify(selectedText);
 
-              const responseDiv = document.getElementById("response");
+            // Do something with the selected text
+            console.log(selectedText);
 
-              const messageHTML = `
-                <div>
-                  <div>Assistant:</div>
-                  <div>${assistantMessage}</div>
-                </div>
-              `;
+            const payload = {
+              messages: [
+                { role: "system", content: mainPrompts += systemInstructions },
+                { role: "user", content: selectedText },
+              ],
+              model: "gpt-3.5-turbo",
+              max_tokens: 2048,
+              temperature: 0.7,
+              n: 1,
+              stream: false,
+            };
 
-              responseDiv.innerHTML = messageHTML;
-              copyToClipboard(assistantMessage); // Add this line
+            const url = "https://api.openai.com/v1/chat/completions";
+            const headers = {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + apiKey,
+            };
 
-              const daysUntilExpiration = 30;
-              const expirationDate = new Date();
-              expirationDate.setDate(expirationDate.getDate() + daysUntilExpiration);
-
-              document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
+            fetch(url, {
+              method: "POST",
+              headers,
+              body: JSON.stringify(payload),
             })
-            .catch((error) => console.error(error));
-        });
+              .then((response) => response.json())
+              .then((data) => {
+                const assistantMessage = data.choices[0].message.content;
+
+                const responseDiv = document.getElementById("response");
+
+                const messageHTML = `
+                  <div>
+                    <div>Assistant:</div>
+                    <div>${assistantMessage}</div>
+                  </div>
+                `;
+
+                responseDiv.innerHTML = messageHTML;
+                copyToClipboard(assistantMessage);
+
+                const daysUntilExpiration = 30;
+                const expirationDate = new Date();
+                    expirationDate.setDate(
+                    expirationDate.getDate() + daysUntilExpiration
+                  );
+
+                  document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
+                })
+                .catch((error) => console.error(error));
+            } else {
+              console.error(result.error.message);
+            }
+          });
       });
 
-      // ...existing getCookie function code...
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+      }
+
+      // Get the stored API key from the cookie
+      const apiKey = getCookie("apiKey");
+
+      // If an API key is found in the cookie, set it as the default value of the API key text field
+      if (apiKey) {
+        // Set the API key input field value to the stored API key
+        document.getElementById("apikey").value = apiKey;
+
+        // Hide the API key input field
+        document
+          .getElementById("apikey")
+          .closest("div")
+          .setAttribute("style", "display: none");
+      }
     });
   </script>
 </body>
