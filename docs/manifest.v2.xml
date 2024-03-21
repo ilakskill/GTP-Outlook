@@ -74,7 +74,7 @@
         <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.v2.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Text"/>
