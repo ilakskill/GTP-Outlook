@@ -160,8 +160,15 @@
     });
 
     function displayResponse(response) {
-      responseDiv.innerHTML = `<div class="response__content">Assistant Response: ${response.choices[0].message.content}</div>`;
-    }
+  // Check if response and the nested properties exist before accessing them
+  if (response && response.choices && response.choices.length > 0 && response.choices[0].message && response.choices[0].message.content) {
+    const messageContent = response.choices[0].message.content;
+    responseDiv.innerHTML = `<div class="response__content">Assistant Response: ${messageContent}</div>`;
+  } else {
+    // If the expected path does not exist, display a different message or handle the error appropriately
+    responseDiv.innerHTML = `<div class="response__content">No response content available.</div>`;
+  }
+}
 
     function displayError(error) {
       responseDiv.innerHTML = `<div class="response">Error: ${error.message}</div>`;
