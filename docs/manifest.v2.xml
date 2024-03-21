@@ -23,7 +23,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.html"/>
+        <SourceLocation DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.v2.html"/>
         <RequestedHeight>300</RequestedHeight>
       </DesktopSettings>
     </Form>
