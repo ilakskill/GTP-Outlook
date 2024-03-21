@@ -4,7 +4,7 @@
   <Version>0.0.0.1</Version>
   <ProviderName>Fresh</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="GPT Email helper"/>
+  <DisplayName DefaultValue="GPT Email helper.v2"/>
   <Description DefaultValue="A tool for Microsoft Outlook that allows users to use the OpenAI language model to do all of the heavy lifting during the work day."/>
   <IconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-128.png"/>
@@ -78,7 +78,7 @@
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Text"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="What What"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="What What.v2"/>
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens text rephrasing panel"/>
