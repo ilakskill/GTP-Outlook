@@ -199,7 +199,7 @@
                 ],
             };
 
-            const response = await fetch("https://api.openai.com/v1/assistants/your_assistant_id/threads", {
+            const response = await fetch("https://api.openai.com/v1/assistants/asst_yYDwQoJch0GXcxX430T8eluR/threads", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -218,7 +218,7 @@
 
 
         async function runAssistant(apiKey, threadId) {
-            const response = await fetch(`https://api.openai.com/v1/assistants/your_assistant_id/threads/${threadId}/run`, {
+            const response = await fetch(`https://api.openai.com/v1/assistants/asst_yYDwQoJch0GXcxX430T8eluR/threads/${threadId}/run`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${apiKey}`,
