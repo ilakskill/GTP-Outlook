@@ -167,22 +167,23 @@
       responseDiv.innerHTML = `<div class="response">Error: ${error.message}</div>`;
     }
 
-    async function createMessage(apiKey, threadId, message) {
-      const response = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify(message),
-      });
+  async function createMessage(apiKey, threadId, message) {
+  const response = await fetch(`https://api.openai.com/v1/threads/${threadId}/messages`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+      "OpenAI-Beta": "assistants=v1" // Include this line
+    },
+    body: JSON.stringify(message),
+  });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-      return await response.json();
-    }
+  return await response.json();
+}
   });
 </script>
 
