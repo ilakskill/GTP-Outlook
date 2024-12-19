@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
   <Id>63dd54c4-4a76-43f6-97a0-f7445d5d452f</Id>
-  <Version>0.0.0.10</Version>
+  <Version>0.0.0.11</Version>
   <ProviderName>Fresh</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="GPT Email Helper"/>
+  <DisplayName DefaultValue="GTP Email Helper"/>
   <Description DefaultValue="A tool for Microsoft Outlook that uses OpenAI to assist with professional email communication."/>
-  <IconUrl DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-128.png"/>
-  <SupportUrl DefaultValue="https://ilakskill.github.io/GPT-Outlook"/>
+  <IconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook"/>
   <AppDomains>
     <AppDomain>https://ilakskill.github.io</AppDomain>
   </AppDomains>
@@ -69,19 +69,19 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/GPT-Outlook/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Email Tools"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Open GPT Helper"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Open GTP Helper"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens the GPT Email Helper panel for rephrasing and improving email text."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens the GTP Email Helper panel for rephrasing and improving email text."/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
