@@ -65,18 +65,15 @@
             </OfficeTab>
           </ExtensionPoint>
           <ExtensionPoint xsi:type="Events">
-            <LaunchEvent>
+            <Event xsi:type="MessageRead">
               <SourceLocation resid="Taskpane.Url"/>
-              <Type>OnNewMessageCompose</Type>
-            </LaunchEvent>
-            <LaunchEvent>
+            </Event>
+            <Event xsi:type="AppointmentAttendeeCommandSurface">
               <SourceLocation resid="Taskpane.Url"/>
-              <Type>OnReply</Type>
-            </LaunchEvent>
-            <LaunchEvent>
+            </Event>
+            <Event xsi:type="AppointmentOrganizerCommandSurface">
               <SourceLocation resid="Taskpane.Url"/>
-              <Type>OnForward</Type>
-            </LaunchEvent>
+            </Event>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
