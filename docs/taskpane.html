@@ -131,9 +131,6 @@
     }
 
     Office.onReady(function () {
-      // Get the currently selected item in the Windows client of Outlook
-      var item = Office.context.mailbox.item;
-
       const form = document.getElementById("apikey-form");
 
       function handleFormSubmission(event) {
@@ -148,13 +145,10 @@
         let userInput = document.getElementById("user-input").value.trim();
 
         // Get the body of the email message
-        item.body.getAsync("text", function (result) {
+        Office.context.mailbox.item.body.getAsync("text", function (result) {
           if (result.status === Office.AsyncResultStatus.Succeeded) {
             // Retrieve the body text from the email message
             var bodyText = result.value;
-
-            // Do something with the body text
-            console.log(bodyText);
 
             const payload = {
               messages: [
