@@ -31,9 +31,16 @@
         <RequestedHeight>300</RequestedHeight>
       </DesktopSettings>
     </Form>
+    <Form xsi:type="ItemEdit">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://ilakskill.github.io/GPT-Outlook/taskpane.html"/>
+        <RequestedHeight>300</RequestedHeight>
+      </DesktopSettings>
+    </Form>
   </FormSettings>
   <Permissions>ReadWriteItem</Permissions>
   <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
     <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
   </Rule>
   <DisableEntityHighlighting>false</DisableEntityHighlighting>
@@ -89,13 +96,6 @@
                 </Control>
               </Group>
             </OfficeTab>
-          </ExtensionPoint>
-          <ExtensionPoint xsi:type="Events">
-            <Event Type="ItemSend">
-              <Action xsi:type="ShowTaskpane">
-                <SourceLocation resid="Taskpane.Url"/>
-              </Action>
-            </Event>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
