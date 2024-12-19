@@ -4,7 +4,7 @@
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" 
            xsi:type="MailApp">
   <Id>63dd54c4-4a76-43f6-97a0-f7445d5d452f</Id>
-  <Version>0.0.0.3</Version>
+  <Version>0.0.0.4</Version>
   <ProviderName>Fresh</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="GPT Email Helper"/>
