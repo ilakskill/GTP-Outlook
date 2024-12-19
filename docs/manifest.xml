@@ -4,11 +4,11 @@
   <Version>0.0.0.1</Version>
   <ProviderName>Fresh</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="GPT Email helper"/>
-  <Description DefaultValue="A tool for Microsoft Outlook that allows users to use the OpenAI language model to do all of the heavy lifting during the work day."/>
-  <IconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-128.png"/>
-  <SupportUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook"/>
+  <DisplayName DefaultValue="GPT Email Helper"/>
+  <Description DefaultValue="A tool for Microsoft Outlook that uses OpenAI to assist with professional email communication."/>
+  <IconUrl DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://ilakskill.github.io/GPT-Outlook"/>
   <AppDomains>
     <AppDomain>https://ilakskill.github.io</AppDomain>
   </AppDomains>
@@ -23,7 +23,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.html"/>
+        <SourceLocation DefaultValue="https://ilakskill.github.io/GPT-Outlook/taskpane.html"/>
         <RequestedHeight>300</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -64,24 +64,38 @@
               </Group>
             </OfficeTab>
           </ExtensionPoint>
+          <ExtensionPoint xsi:type="Events">
+            <LaunchEvent>
+              <SourceLocation resid="Taskpane.Url"/>
+              <Type>OnNewMessageCompose</Type>
+            </LaunchEvent>
+            <LaunchEvent>
+              <SourceLocation resid="Taskpane.Url"/>
+              <Type>OnReply</Type>
+            </LaunchEvent>
+            <LaunchEvent>
+              <SourceLocation resid="Taskpane.Url"/>
+              <Type>OnForward</Type>
+            </LaunchEvent>
+          </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/GPT-Outlook/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/GTP-Outlook/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://ilakskill.github.io/GPT-Outlook/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GroupLabel" DefaultValue="Text"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="What What"/>
+        <bt:String id="GroupLabel" DefaultValue="Email Tools"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Open GPT Helper"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens text rephrasing panel"/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens the GPT Email Helper panel for rephrasing and improving email text."/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
