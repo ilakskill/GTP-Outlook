@@ -34,7 +34,7 @@
   </FormSettings>
   <Permissions>ReadWriteItem</Permissions>
   <Rule xsi:type="RuleCollection" Mode="Or">
-    <Rule xsi:type="ItemIs" ItemType="Message" FormType="ReadOrEdit"/>
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
   </Rule>
   <DisableEntityHighlighting>false</DisableEntityHighlighting>
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
@@ -89,6 +89,13 @@
                 </Control>
               </Group>
             </OfficeTab>
+          </ExtensionPoint>
+          <ExtensionPoint xsi:type="Events">
+            <Event Type="ItemSend">
+              <Action xsi:type="ShowTaskpane">
+                <SourceLocation resid="Taskpane.Url"/>
+              </Action>
+            </Event>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
