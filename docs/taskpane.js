@@ -55,7 +55,7 @@ async function analyzeEmail(subject, body) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": ""
+            "Authorization": "Bearer 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"
         },
         body: JSON.stringify(payload)
     });
