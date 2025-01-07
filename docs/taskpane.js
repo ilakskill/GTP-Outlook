@@ -13,18 +13,24 @@ Office.onReady(() => {
     const COOKIE_EXPIRY_DAYS = 30;
 
     // Helper function to set a cookie
-    function setCookie(name, value, days) {
-      const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
-      document.cookie = `${name}=${value}; expires=${expires}; path=/; Secure; SameSite=None`;
-      console.log("Setting Cookie: ", document.cookie)
+     function setCookie(name, value, days) {
+        const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+         const cookieString = `${name}=${value}; expires=${expires}; path=/; Secure; SameSite=None`;
+         console.log("Setting Cookie String:", cookieString);
+         document.cookie = cookieString;
+         console.log("After setting cookie:", document.cookie);
     }
 
-    // Helper function to get a cookie
-    function getCookie(name) {
-      console.log("Getting Cookie: ", document.cookie)
-      const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-      return match ? match[2] : null;
-    }
+
+  // Helper function to get a cookie
+  function getCookie(name) {
+    console.log("Getting Cookies:", document.cookie);
+    const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+    const cookieValue =  match ? match[2] : null;
+    console.log(`Retrieved Cookie: ${name}, Value: ${cookieValue}`)
+    return cookieValue;
+  }
+
 
     function setLoadingState(isLoading) {
       resultsDiv.innerHTML = isLoading ? "<p>Loading...</p>" : "";
@@ -37,23 +43,24 @@ Office.onReady(() => {
 
     function validateApiKey(apiKey) {
         const regex = /^sk-[a-zA-Z0-9]{48}$/;
-        return regex.test(apiKey);
+        const result = regex.test(apiKey);
+        console.log("Validating API key: ", result)
+         return result;
     }
-
 
     async function fetchEmailBody() {
       return new Promise((resolve, reject) => {
         Office.context.mailbox.item.body.getAsync("text", (result) => {
           if (result.status === Office.AsyncResultStatus.Succeeded) {
-              resolve(result.value);
+            resolve(result.value);
           } else {
-              reject(`Error retrieving email body: ${result.error.message}`);
+            reject(`Error retrieving email body: ${result.error.message}`);
           }
         });
       });
     }
 
-    async function analyzeEmail(apiKey, subject, body) {
+  async function analyzeEmail(apiKey, subject, body) {
         const payload = {
             model: OPENAI_MODEL,
             messages: [
@@ -78,9 +85,8 @@ Office.onReady(() => {
         if (!response.ok) {
           const errorData = await response.json();
           const errorMsg = errorData.error ? errorData.error.message : `OpenAI API Error: ${response.status} ${response.statusText}`;
-           throw new Error(errorMsg);
+          throw new Error(errorMsg);
         }
-
 
         const data = await response.json();
         const rawContent = data.choices[0].message.content;
@@ -100,40 +106,40 @@ Office.onReady(() => {
       }
     }
 
-      async function startEmailAnalysis(apiKey) {
-          setLoadingState(true);
+    async function startEmailAnalysis(apiKey) {
+      setLoadingState(true);
 
-           if (!Office.context || !Office.context.mailbox) {
-              displayError("This add-in can only be used in Outlook.");
-                return;
-            }
-
-            if(!Office.context.mailbox.item){
-               displayError("No email selected.");
-                return;
-            }
-
-        try {
-            const body = await fetchEmailBody();
-            if(!body){
-               displayError("Email body is empty.");
-                 return;
-            }
-            const analysisResults = await analyzeEmail(
-                apiKey,
-                Office.context.mailbox.item.subject,
-                body
-            );
-             resultsDiv.innerHTML = `
-                <h2>Analysis Results</h2>
-                <p><strong>Project:</strong> ${analysisResults.project}</p>
-                <p><strong>Site:</strong> ${analysisResults.site}</p>
-            `;
-        } catch (error) {
-            displayError(error.message);
-        } finally {
-            setLoadingState(false);
+      if (!Office.context || !Office.context.mailbox) {
+          displayError("This add-in can only be used in Outlook.");
+            return;
         }
+
+        if(!Office.context.mailbox.item){
+           displayError("No email selected.");
+            return;
+        }
+
+      try {
+        const body = await fetchEmailBody();
+          if(!body){
+             displayError("Email body is empty.");
+               return;
+          }
+        const analysisResults = await analyzeEmail(
+          apiKey,
+          Office.context.mailbox.item.subject,
+          body
+        );
+        resultsDiv.innerHTML = `
+            <h2>Analysis Results</h2>
+            <p><strong>Project:</strong> ${analysisResults.project}</p>
+            <p><strong>Site:</strong> ${analysisResults.site}</p>
+        `;
+      } catch (error) {
+        displayError(error.message);
+      } finally {
+        setLoadingState(false);
+      }
     }
 
     // Check for stored API key
@@ -141,7 +147,7 @@ Office.onReady(() => {
     if (storedApiKey) {
       keyInputDiv.style.display = "none";
       resultsDiv.style.display = "block";
-      startEmailAnalysis(storedApiKey);
+       startEmailAnalysis(storedApiKey);
     }
 
     // Save API key and start analysis
@@ -153,16 +159,14 @@ Office.onReady(() => {
         return;
       }
 
-     if(!validateApiKey(apiKey)){
+      if(!validateApiKey(apiKey)){
         displayError("Please enter a valid OpenAI API Key (sk-...).");
         return;
      }
-
-
       setCookie(COOKIE_NAME, apiKey, COOKIE_EXPIRY_DAYS);
       keyInputDiv.style.display = "none";
       resultsDiv.style.display = "block";
-      await startEmailAnalysis(apiKey);
+       await startEmailAnalysis(apiKey);
     });
   });
 });
