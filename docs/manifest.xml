@@ -1,80 +1,376 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" 
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-           xsi:type="MailApp">
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GPT Email Helper</title>
+    <style>
+      body {
+        background-color: #f7f7f7;
+        font-family: Arial, sans-serif;
+      }
 
-  <Id>fce772c1-e6c1-4ff9-9aca-e7e9f1bc10be</Id>
-  <Version>1.0.0.0</Version>
-  <ProviderName>SS Addon</ProviderName>
-  <DefaultLocale>en-US</DefaultLocale>
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1rem;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
 
-  <DisplayName DefaultValue="SS Outlook Add-in" />
-  <Description DefaultValue="Displays Smartsheet results in a new window." />
+      label {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
 
-  <IconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-64.png" />
-  <HighResolutionIconUrl DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-128.png" />
+      input,
+      textarea,
+      select {
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        color: #333;
+        background-color: #fff;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease-in-out;
+      }
 
-  <Permissions>ReadWriteItem</Permissions>
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border: 1px solid #0078d4;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1),
+          0 0 5px rgba(0, 120, 212, 0.5);
+      }
 
-  <Hosts>
-    <Host Name="Mailbox" />
-  </Hosts>
+      button {
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        background-color: #0078d4;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
 
-  <AppDomains>
-    <AppDomain>https://ilakskill.github.io/GTP-Outlook</AppDomain>
-  </AppDomains>
+      button:hover {
+        background-color: #005a9e;
+      }
 
-  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" Version="1.1">
-    <Requirements>
-      <bt:Sets DefaultMinVersion="1.3">
-        <bt:Set Name="Mailbox" />
-      </bt:Sets>
-    </Requirements>
+      hr {
+        margin: 2rem 0;
+        border: none;
+        border-top: 1px solid #ddd;
+      }
 
-    <Hosts>
-      <Host xsi:type="MailHost">
-        <DesktopFormFactor>
-          <FunctionFile>https://ilakskill.github.io/GTP-Outlook/commands.js</FunctionFile>
+      .response {
+        background-color: #f2f2f2;
+        padding: 20px;
+        border: 1px solid #e6e6e6;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
 
-          <ExtensionPoint xsi:type="MessageReadCommandSurface">
-            <OfficeTab id="TabDefault">
-              <Group id="msgReadGroup">
-                <Label resid="GroupLabel" />
-                <Control xsi:type="Button" id="msgReadOpenPaneButton">
-                  <Label resid="TaskpaneButton.Label" />
-                  <Supertip>
-                    <Title resid="TaskpaneButton.Label" />
-                    <Description resid="TaskpaneButton.Tooltip" />
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16x16" />
-                    <bt:Image size="32" resid="Icon.32x32" />
-                    <bt:Image size="80" resid="Icon.80x80" />
-                  </Icon>
-                  <Action xsi:type="ExecuteFunction">
-                    <FunctionName>openResultsWindow</FunctionName>
-                  </Action>
-                </Control>
-              </Group>
-            </OfficeTab>
-          </ExtensionPoint>
-        </DesktopFormFactor>
-      </Host>
-    </Hosts>
+      .response__role {
+        color: #707070;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
 
-    <Resources>
-      <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://ilakskill.github.io/GTP-Outlook/assets/icon-80.png"/>
-      </bt:Images>
-      <bt:ShortStrings>
-        <bt:String id="GroupLabel" DefaultValue="SS Add-in"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Show Results"/>
-      </bt:ShortStrings>
-      <bt:LongStrings>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Displays Smartsheet results in a new window."/>
-      </bt:LongStrings>
-    </Resources>
-  </VersionOverrides>
-</OfficeApp>
+      .response__content {
+        padding: 10px;
+        font-size: 16px;
+        line-height: 1.5;
+        background-color: #fff;
+        border: 1px solid #e6e6e6;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <form id="apikey-form">
+      <div>
+        <label for="apikey">API Key:</label>
+        <input id="apikey" name="apikey" type="text" required />
+      </div>
+      <button type="button" id="processEmail">Process Email</button>
+    </form>
+
+    <hr />
+    <div id="response"></div>
+    <div id="smartsheet-results"></div>
+     <div id="email-draft"></div>
+
+    <script
+      src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"
+      type="text/javascript"
+    ></script>
+    <script type="text/javascript">
+      function copyToClipboard(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      Office.onReady(function () {
+        // Get the currently selected item in the Windows client of Outlook
+        try {
+          var item = Office.context.mailbox.item;
+        } catch (error) {
+          console.error("Error getting mailbox item", error);
+          return;
+        }
+
+        const form = document.getElementById("apikey-form");
+        const processEmailButton = document.getElementById("processEmail");
+
+        function processEmail() {
+          let apiKey = document.getElementById("apikey").value.trim();
+
+          if (!apiKey) {
+            apiKey = getCookie("apiKey");
+          }
+
+          // Get the email body asynchronously
+          try {
+            item.body.getAsync(
+              "text",
+              {
+                asyncContext: {
+                  apiKey,
+                  item,
+                },
+              },
+              function (result) {
+                if (result.status === Office.AsyncResultStatus.Succeeded) {
+                  const emailBody = result.value;
+                  const { apiKey, item } = result.asyncContext;
+                  // truncate email body
+                  const truncatedEmail = emailBody
+                    .split(" ")
+                    .slice(0, 5000)
+                    .join(" ");
+                  // Call openai
+                  callOpenAi(apiKey, truncatedEmail, item);
+                } else {
+                  console.error("Error getting email body", result.error.message);
+                  return;
+                }
+              }
+            );
+          } catch (error) {
+            console.error("Error getting email body", error);
+            return;
+          }
+        }
+
+        processEmailButton.addEventListener("click", function () {
+          processEmail();
+        });
+
+        // Initial processing on open
+        processEmail();
+
+
+          async function callOpenAi(apiKey, selectedText, item) {
+           const payload = {
+                messages: [
+                    { role: "system", content: "You are a project management assistant. Respond only with JSON." },
+                    {
+                        role: "user",
+                        content: `Analyze the following email content and extract the project name and site ID. If a project name or site ID cannot be confidently identified, use "unknown" as the value. Respond with a JSON object in the following format: { "project": "project_name", "site": "site_id" }. Ensure that the JSON response is valid and includes the project and site, even if the values are "unknown".\n\nSubject: ${item.subject}\n\nBody: ${selectedText}`
+                    }
+                ],
+                model: "gpt-4",
+                  max_tokens: 1000,
+                  temperature: 0.2,
+                    n: 1,
+                    stream: false,
+                };
+
+                const url = "https://api.openai.com/v1/chat/completions";
+                 const headers = {
+                    "Content-Type": "application/json",
+                   Authorization: "Bearer " + apiKey,
+                  };
+
+                fetch(url, {
+                    method: "POST",
+                    headers,
+                    body: JSON.stringify(payload),
+                    })
+                      .then((response) => response.json())
+                      .then(async (data) => {
+                           let assistantMessage = data.choices[0].message.content;
+                            let parsedData;
+                           try{
+                            parsedData = JSON.parse(assistantMessage);
+                            const responseDiv = document.getElementById("response");
+
+                            const messageHTML = `
+                                  <div>
+                                    <div>Project:</div>
+                                    <div>${parsedData.project}</div>
+                                   <div>Site ID:</div>
+                                    <div>${parsedData.site}</div>
+                                  </div>
+                              `;
+
+                            responseDiv.innerHTML = messageHTML;
+                             copyToClipboard(assistantMessage);
+                           } catch(e) {
+                               console.error('Invalid JSON Response', e);
+                              const responseDiv = document.getElementById("response");
+                               const messageHTML = `
+                                   <div>
+                                       <div>Assistant:</div>
+                                       <div>${assistantMessage}</div>
+                                     </div>
+                                 `;
+
+                                responseDiv.innerHTML = messageHTML;
+                               copyToClipboard(assistantMessage);
+                             }
+                           if(parsedData) {
+                               await searchSmartsheet(apiKey, parsedData);
+                                await generateEmailResponse(apiKey, selectedText, item, parsedData);
+                           }
+                    })
+                  .catch((error) => console.error(error));
+
+        }
+
+
+        async function generateEmailResponse(apiKey, selectedText, item, extractedData) {
+           const { project, site } = extractedData;
+
+            const payload = {
+                messages: [
+                    { role: "system", content: "You are a highly skilled Business Correspondence Editor with expertise in editing and refining professional email communications. Your role is to review and rewrite business emails for grammar, punctuation, clarity, and a polished tone, while preserving the original intent and information. When appropriate, inject subtle charisma or positivity without changing the meaning of the content.\n\nHere are your key guidelines based on previous examples:\n\nClarity and Precision: Ensure that emails are easy to read, concise, and directly address all recipients with appropriate mentions (e.g., “@Kevin Nash”).\nProfessional Tone with Nuance: Keep the tone formal but friendly. Inject positive or engaging language only when it enhances the message naturally (e.g., \"Thank you for your support in making this a success!\").\nDirect Instructions and Requests: When specific actions are needed, make requests clear and actionable. Maintain a polite but direct tone for any reminders or deadlines, especially if adherence is critical.\nFormatting for Readability: Organize information for easy reading. Use bullet points, lists, or structured highlights (e.g., dates, bus numbers) as needed for clarity.\nConcise Acknowledgments and Closings: Include concise and professional closings, expressing gratitude or inviting questions as needed (e.g., \"Thank you for your attention to these details\").\nAdaptable Tone for Context: Adjust tone and level of formality based on the recipient's familiarity or role (e.g., slightly informal and friendly for colleagues, more structured and formal for external clients or partners).\nYour goal is to elevate the communication to be clear, effective, and professional, ensuring a smooth flow of information that aligns with the original intent." },
+                    {
+                        role: "user",
+                        content: `Given the following email and extracted project (${project}) and site (${site}) information, draft a short, professional response. \n\nSubject: ${item.subject}\n\nBody: ${selectedText}`
+                    }
+                ],
+                model: "gpt-4",
+                  max_tokens: 1000,
+                  temperature: 0.7,
+                    n: 1,
+                    stream: false,
+            };
+
+            const url = "https://api.openai.com/v1/chat/completions";
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+            };
+
+          try {
+              const response = await fetch(url, {
+                  method: "POST",
+                    headers,
+                    body: JSON.stringify(payload),
+                });
+
+              if (!response.ok) {
+                const errorData = await response.json();
+                const errorMsg = errorData.message ? errorData.message : `OpenAI API Error: ${response.status} ${response.statusText}`;
+                 throw new Error(errorMsg);
+              }
+
+              const data = await response.json();
+               const emailDraft = data.choices[0].message.content;
+               const emailDraftDiv = document.getElementById("email-draft");
+               emailDraftDiv.innerHTML = `
+                  <h2>Email Draft</h2>
+                  <div class="response__content">${emailDraft}</div>
+                 `;
+                 copyToClipboard(emailDraft);
+
+             } catch (error) {
+                 console.error("OpenAI API Error:", error);
+                 const emailDraftDiv = document.getElementById("email-draft");
+                   emailDraftDiv.innerHTML = `<p style="color: red;">Error generating Email Draft: ${error.message}</p>`
+            }
+
+        }
+
+
+
+        async function searchSmartsheet(apiKey, extractedData) {
+          const smartsheetToken = "YOUR_SMARTSHEET_API_TOKEN"; // THIS IS NOT SAFE
+          const smartsheetResultsDiv = document.getElementById("smartsheet-results");
+          smartsheetResultsDiv.innerHTML = "<p>Searching Smartsheet...</p>";
+
+           if (!smartsheetToken) {
+              smartsheetResultsDiv.innerHTML = '<p style="color: red;">Error: No Smartsheet API token set</p>';
+              return;
+           }
+
+          const { project, site } = extractedData;
+          const searchURL = `https://api.smartsheet.com/2.0/search/sheets?query=${project} ${site}`;
+
+          try {
+              const response = await fetch(searchURL, {
+                method: "GET",
+                 headers: {
+                  Authorization: `Bearer ${smartsheetToken}`,
+                 },
+                });
+
+               if (!response.ok) {
+                   const errorData = await response.json();
+                   const errorMsg = errorData.message ? errorData.message : `Smartsheet API Error: ${response.status} ${response.statusText}`;
+                   throw new Error(errorMsg);
+               }
+
+                const data = await response.json();
+             smartsheetResultsDiv.innerHTML = `
+                <h2>Smartsheet Results</h2>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+              `;
+
+              } catch(error){
+                 smartsheetResultsDiv.innerHTML = `<p style="color: red;">Error searching Smartsheet: ${error.message}</p>`
+                 console.error('Smartsheet API Error:', error);
+              }
+        }
+
+
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+
+        // Get the stored API key from the cookie
+        const apiKey = getCookie("apiKey");
+
+        // If an API key is found in the cookie, set it as the default value of the API key text field
+        if (apiKey) {
+          // Set the API key input field value to the stored API key
+          document.getElementById("apikey").value = apiKey;
+
+          // Hide the API key input field
+          document
+            .getElementById("apikey")
+            .closest("div")
+            .setAttribute("style", "display: none");
+        }
+      });
+    </script>
+  </body>
+</html>
