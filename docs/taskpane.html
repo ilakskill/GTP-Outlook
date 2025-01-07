@@ -103,6 +103,15 @@
         <label for="apikey">API Key:</label>
         <input id="apikey" name="apikey" type="text" required />
       </div>
+          <div>
+           <label for="instructions-content">Instructions</label>
+            <div>
+              <textarea
+               id="instructions-content"
+                name="instructions-content"
+              ></textarea>
+             </div>
+           </div>
       <button type="button" id="processEmail">Process Email</button>
     </form>
 
@@ -142,6 +151,7 @@
             apiKey = getCookie("apiKey");
           }
 
+
           // Get the email body asynchronously
           try {
             item.body.getAsync(
@@ -162,7 +172,7 @@
                     .slice(0, 5000)
                     .join(" ");
                   // Call openai
-                   generateEmailResponse(apiKey, truncatedEmail, item);
+                   generateEmailResponse(apiKey, truncatedEmail, item)
                 } else {
                   console.error("Error getting email body", result.error.message);
                   return;
@@ -184,10 +194,13 @@
 
 
         async function generateEmailResponse(apiKey, selectedText, item) {
+         let systemInstructions = document
+            .getElementById("instructions-content")
+            .value.trim();
 
-            const payload = {
+           const payload = {
                 messages: [
-                     { role: "system", content: "You are a highly skilled Business Correspondence Expert, and your task is to write a response to the provided email. Make sure your response is concise, professional and polite. Ensure your response is clear, effective, and professional, ensuring a smooth flow of information that aligns with the original intent." },
+                     { role: "system", content: "You are a highly skilled Business Correspondence Expert, and your task is to write a response to the provided email. Make sure your response is concise, professional and polite. Ensure your response is clear, effective, and professional, ensuring a smooth flow of information that aligns with the original intent."  + systemInstructions },
                     {
                         role: "user",
                         content: `Given the following email, draft a short, professional response. \n\nSubject: ${item.subject}\n\nBody: ${selectedText}`
