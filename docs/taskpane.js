@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("https://api.smartsheet.com/2.0/sheets/{sheet_id}", {
         method: "GET",
         headers: {
-            "Authorization": "Bearer YOUR_API_KEY"
+            "Authorization": "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"
         }
     })
     .then(response => response.json())
