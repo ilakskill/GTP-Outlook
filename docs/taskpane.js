@@ -55,7 +55,7 @@ async function analyzeEmail(subject, body) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": 'Bearer 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'
+            "Authorization": 'Bearer ${apiKey}'
         },
         body: JSON.stringify(payload)
     });
@@ -70,3 +70,4 @@ async function analyzeEmail(subject, body) {
 
     return JSON.parse(data.choices[0].message.content);
 }
+console.log(process.env.OPENAI_API_KEY); // Logs the API key
