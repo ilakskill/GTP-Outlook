@@ -12,16 +12,19 @@ Office.onReady((info) => {
         const saveKeyButton = document.getElementById("saveKeyButton");
 
         // Helper function to set a cookie
-        function setCookie(name, value, days) {
-            const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
-            document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-        }
+      function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    const cookieString = `${name}=${value}; expires=${expires}; path=/; Secure; SameSite=None`;
+    console.log("Setting Cookie:", cookieString);
+    document.cookie = cookieString;
+}
 
-        // Helper function to get a cookie
-        function getCookie(name) {
-            const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-            return match ? match[2] : null;
-        }
+function getCookie(name) {
+    console.log("Current Cookies:", document.cookie);
+    const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+    return match ? match[2] : null;
+}
+
 
         // Check for stored API key
         const storedApiKey = getCookie("openai_api_key");
