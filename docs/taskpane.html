@@ -5,7 +5,7 @@
     <title>SS Add-in Task Pane</title>
     <!-- Include Office.js library -->
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script src="taskpane.js"></script>
+     <script src="taskpane.js"></script>
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -15,16 +15,6 @@
         <input type="text" id="apiKeyInput" placeholder="sk-...">
         <button id="saveKeyButton">Save Key</button>
     </div>
-     <script>
-        function setTestCookie() {
-             const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString();
-            const cookieString = `test_cookie=test_value; expires=${expires}; path=/; Secure; SameSite=None`;
-            document.cookie = cookieString;
-             console.log('setting cookie: ', document.cookie)
-            console.log('set cookie, check browser tools')
-        }
-        setTestCookie()
-    </script>
     <div id="results" style="display: none;">
         <p>Fetching email details...</p>
     </div>
