@@ -120,8 +120,6 @@
           ></textarea>
         </div>
       </div>
-
-      <button type="submit">Submit</button>
     </form>
 
     <hr />
@@ -152,14 +150,12 @@
 
           const form = document.getElementById("apikey-form");
 
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
 
-           let apiKey = document.getElementById("apikey").value.trim();
+          let apiKey = document.getElementById("apikey").value.trim();
 
           if (!apiKey) {
             apiKey = getCookie("apiKey");
-          }
+           }
 
           let mainPrompts = document
             .getElementById("mainPrompts")
@@ -168,6 +164,7 @@
           let systemInstructions = document
             .getElementById("instructions-content")
             .value.trim();
+
 
 
          // Get the email body asynchronously
@@ -197,12 +194,11 @@
            return;
         }
 
-         });
 
 
 
         async function callOpenAi(apiKey, mainPrompts, systemInstructions, selectedText, item) {
-            selectedText = JSON.stringify(selectedText);
+          selectedText = JSON.stringify(selectedText);
               const payload = {
                 messages: [
                     { role: "system", content: mainPrompts += systemInstructions },
@@ -295,7 +291,7 @@
              .closest("div")
              .setAttribute("style", "display: none");
          }
-    });
-</script>
+      });
+    </script>
   </body>
 </html>
