@@ -55,7 +55,7 @@ async function analyzeEmail(subject, body) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": 'Bearer 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'
+            "Authorization": 'Bearer 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'
         },
         body: JSON.stringify(payload)
     });
