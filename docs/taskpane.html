@@ -191,10 +191,10 @@
           async function callOpenAi(apiKey, selectedText, item) {
            const payload = {
                 messages: [
-                    { role: "system", content: "You are a project management assistant. Respond only with JSON." },
+                    { role: "system", content: "You are an expert project management assistant. Your task is to analyze emails and extract key project and site information. You MUST respond in JSON format." },
                     {
                         role: "user",
-                        content: `Analyze the following email to determine the project and site mentioned. Respond only with JSON in this format: {"project": "project_name", "site": "site_name"}. \n\nSubject: ${item.subject}\n\nBody: ${selectedText}`
+                        content: `Analyze the following email content and extract the project name and site ID. If a project name or site ID cannot be confidently identified, use "unknown" as the value. Respond with JSON object in the following format: \`\`\`json { "project": "project_name", "site": "site_id" }\`\`\`. Ensure that the JSON response is valid and includes the project and site, even if the values are "unknown".\n\nSubject: ${item.subject}\n\nBody: ${selectedText}`
                     }
                 ],
                 model: "gpt-4",
