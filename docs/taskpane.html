@@ -103,11 +103,12 @@
         <label for="apikey">API Key:</label>
         <input id="apikey" name="apikey" type="text" required />
       </div>
-         <button type="button" id="processEmail">Process Email</button>
+      <button type="button" id="processEmail">Process Email</button>
     </form>
 
     <hr />
     <div id="response"></div>
+    <div id="smartsheet-results"></div>
 
     <script
       src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"
@@ -155,19 +156,14 @@
               function (result) {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
                   const emailBody = result.value;
-                  const { apiKey, item } =
-                    result.asyncContext;
+                  const { apiKey, item } = result.asyncContext;
                   // truncate email body
                   const truncatedEmail = emailBody
                     .split(" ")
                     .slice(0, 5000)
                     .join(" ");
                   // Call openai
-                  callOpenAi(
-                    apiKey,
-                    truncatedEmail,
-                    item
-                  );
+                  callOpenAi(apiKey, truncatedEmail, item);
                 } else {
                   console.error("Error getting email body", result.error.message);
                   return;
@@ -184,80 +180,126 @@
           processEmail();
         });
 
-         // Initial processing on open
+        // Initial processing on open
         processEmail();
 
+        async function callOpenAi(apiKey, selectedText, item) {
+          const payload = {
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are an expert project management assistant. Your task is to analyze emails and extract key project and site information. You MUST respond in JSON format.",
+              },
+              {
+                role: "user",
+                content: `Analyze the following email content and extract the project name and site ID. If a project name or site ID cannot be confidently identified, use "unknown" as the value. Respond with JSON object in the following format: \`\`\`json { "project": "project_name", "site": "site_id" }\`\`\`. Ensure that the JSON response is valid and includes the project and site, even if the values are "unknown".\n\nSubject: ${item.subject}\n\nBody: ${selectedText}`,
+              },
+            ],
+            model: "gpt-4",
+            max_tokens: 1000,
+            temperature: 0.2,
+            n: 1,
+            stream: false,
+          };
 
-          async function callOpenAi(apiKey, selectedText, item) {
-           const payload = {
-                messages: [
-                    { role: "system", content: "You are an expert project management assistant. Your task is to analyze emails and extract key project and site information. You MUST respond in JSON format." },
-                    {
-                        role: "user",
-                        content: `Analyze the following email content and extract the project name and site ID. If a project name or site ID [typically 4 didget value, dont confuse for 7 digit zip codes] cannot be confidently identified, use "unknown" as the value. Respond with JSON object in the following format: \`\`\`json { "project": "project_name", "site": "site_id" }\`\`\`. Ensure that the JSON response is valid and includes the project and site, even if the values are "unknown".\n\nSubject: ${item.subject}\n\nBody: ${selectedText}`
-                    }
-                ],
-                model: "gpt-4",
-                  max_tokens: 1000,
-                  temperature: 0.7,
-                    n: 1,
-                    stream: false,
-                };
+          const url = "https://api.openai.com/v1/chat/completions";
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + apiKey,
+          };
 
-                const url = "https://api.openai.com/v1/chat/completions";
-                 const headers = {
-                    "Content-Type": "application/json",
-                   Authorization: "Bearer " + apiKey,
-                  };
+          fetch(url, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(payload),
+          })
+            .then((response) => response.json())
+            .then(async (data) => {
+                let assistantMessage = data.choices[0].message.content;
+              let parsedData;
+                 try {
+                    parsedData = JSON.parse(assistantMessage);
+                  const responseDiv = document.getElementById("response");
 
-                fetch(url, {
-                    method: "POST",
-                    headers,
-                    body: JSON.stringify(payload),
-                    })
-                      .then((response) => response.json())
-                      .then((data) => {
-                           let assistantMessage = data.choices[0].message.content;
-                         try{
-                            const parsedData = JSON.parse(assistantMessage);
-                            const responseDiv = document.getElementById("response");
+                  const messageHTML = `
+                        <div>
+                          <div>Project:</div>
+                          <div>${parsedData.project}</div>
+                         <div>Site ID:</div>
+                          <div>${parsedData.site}</div>
+                        </div>
+                    `;
 
-                            const messageHTML = `
-                                  <div>
-                                    <div>Project:</div>
-                                    <div>${parsedData.project}</div>
-                                   <div>Site ID:</div>
-                                    <div>${parsedData.site}</div>
-                                  </div>
-                              `;
+                  responseDiv.innerHTML = messageHTML;
+                  copyToClipboard(assistantMessage);
+                 } catch(e) {
+                     console.error('Invalid JSON Response', e);
+                   const responseDiv = document.getElementById("response");
+                    const messageHTML = `
+                        <div>
+                            <div>Assistant:</div>
+                            <div>${assistantMessage}</div>
+                          </div>
+                      `;
 
-                            responseDiv.innerHTML = messageHTML;
-                            copyToClipboard(assistantMessage);
-                          } catch(e) {
-                             console.error('Invalid JSON Response', e);
-                            const responseDiv = document.getElementById("response");
-                             const messageHTML = `
-                                 <div>
-                                     <div>Assistant:</div>
-                                     <div>${assistantMessage}</div>
-                                   </div>
-                               `;
-
-                            responseDiv.innerHTML = messageHTML;
-                           copyToClipboard(assistantMessage);
-                          }
+                    responseDiv.innerHTML = messageHTML;
+                  copyToClipboard(assistantMessage);
+                  }
+                  if(parsedData) {
+                      await searchSmartsheet(apiKey, parsedData);
+                  }
 
 
-                        const daysUntilExpiration = 30;
-                        const expirationDate = new Date();
-                         expirationDate.setDate(
-                            expirationDate.getDate() + daysUntilExpiration
-                        );
+              const daysUntilExpiration = 30;
+              const expirationDate = new Date();
+              expirationDate.setDate(
+                expirationDate.getDate() + daysUntilExpiration
+              );
 
-                      document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
-                    })
-                  .catch((error) => console.error(error));
+              document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
+            })
+            .catch((error) => console.error(error));
+        }
 
+
+        async function searchSmartsheet(apiKey, extractedData) {
+           const smartsheetToken = '5vXp11f5jyUuBqH0KWgRoIf7oj562wVwuaVqe'; // THIS IS NOT SAFE
+           const smartsheetResultsDiv = document.getElementById('smartsheet-results');
+             smartsheetResultsDiv.innerHTML = '<p>Searching Smartsheet...</p>';
+
+           if (!smartsheetToken) {
+              smartsheetResultsDiv.innerHTML = '<p style="color: red;">Error: No Smartsheet API token set</p>'
+              return;
+           }
+
+          const { project, site } = extractedData;
+          const searchURL = `https://api.smartsheet.com/2.0/search/sheets?query=${project} ${site}`;
+
+          try {
+              const response = await fetch(searchURL, {
+                method: "GET",
+                 headers: {
+                  Authorization: `Bearer ${smartsheetToken}`,
+                 },
+                });
+
+               if (!response.ok) {
+                   const errorData = await response.json();
+                   const errorMsg = errorData.message ? errorData.message : `Smartsheet API Error: ${response.status} ${response.statusText}`;
+                   throw new Error(errorMsg);
+               }
+
+                const data = await response.json();
+             smartsheetResultsDiv.innerHTML = `
+                <h2>Smartsheet Results</h2>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+              `;
+
+              } catch(error){
+                 smartsheetResultsDiv.innerHTML = `<p style="color: red;">Error searching Smartsheet: ${error.message}</p>`
+                 console.error('Smartsheet API Error:', error);
+              }
         }
 
         function getCookie(name) {
