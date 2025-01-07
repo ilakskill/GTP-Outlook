@@ -55,7 +55,7 @@ async function analyzeEmail(subject, body) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer YOUR_OPENAI_API_KEY`
+            "Authorization": `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`
         },
         body: JSON.stringify(payload)
     });
