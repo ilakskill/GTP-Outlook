@@ -183,7 +183,7 @@
         // Initial processing on open
         processEmail();
 
-        async function callOpenAi(apiKey, selectedText, item) {
+         async function callOpenAi(apiKey, selectedText, item) {
           const payload = {
             messages: [
               {
@@ -193,7 +193,7 @@
               },
               {
                 role: "user",
-                content: `Analyze the following email content and extract the project name and site ID. If a project name or site ID cannot be confidently identified, use "unknown" as the value. Respond with JSON object in the following format: \`\`\`json { "project": "project_name", "site": "site_id" }\`\`\`. Ensure that the JSON response is valid and includes the project and site, even if the values are "unknown".\n\nSubject: ${item.subject}\n\nBody: ${selectedText}`,
+                content: `Analyze the following email content and extract the project name and site ID. If a project name or site ID cannot be confidently identified, use "unknown" as the value. Respond with a JSON object in the following format: { "project": "project_name", "site": "site_id" }. Ensure that the JSON response is valid and includes the project and site, even if the values are "unknown".\n\nSubject: ${item.subject}\n\nBody: ${selectedText}`,
               },
             ],
             model: "gpt-4",
@@ -216,23 +216,23 @@
           })
             .then((response) => response.json())
             .then(async (data) => {
-                let assistantMessage = data.choices[0].message.content;
-              let parsedData;
-                 try {
-                    parsedData = JSON.parse(assistantMessage);
-                  const responseDiv = document.getElementById("response");
+              let assistantMessage = data.choices[0].message.content;
+                let parsedData;
+               try {
+                  parsedData = JSON.parse(assistantMessage);
+                const responseDiv = document.getElementById("response");
 
-                  const messageHTML = `
-                        <div>
-                          <div>Project:</div>
-                          <div>${parsedData.project}</div>
-                         <div>Site ID:</div>
-                          <div>${parsedData.site}</div>
-                        </div>
-                    `;
+                const messageHTML = `
+                      <div>
+                        <div>Project:</div>
+                        <div>${parsedData.project}</div>
+                       <div>Site ID:</div>
+                        <div>${parsedData.site}</div>
+                      </div>
+                  `;
 
-                  responseDiv.innerHTML = messageHTML;
-                  copyToClipboard(assistantMessage);
+                responseDiv.innerHTML = messageHTML;
+                copyToClipboard(assistantMessage);
                  } catch(e) {
                      console.error('Invalid JSON Response', e);
                    const responseDiv = document.getElementById("response");
@@ -245,29 +245,20 @@
 
                     responseDiv.innerHTML = messageHTML;
                   copyToClipboard(assistantMessage);
-                  }
-                  if(parsedData) {
-                      await searchSmartsheet(apiKey, parsedData);
-                  }
-
-
-              const daysUntilExpiration = 30;
-              const expirationDate = new Date();
-              expirationDate.setDate(
-                expirationDate.getDate() + daysUntilExpiration
-              );
-
-              document.cookie = `apiKey=${apiKey}; expires=${expirationDate.toUTCString()}`;
+                 }
+               if(parsedData){
+                  await searchSmartsheet(apiKey, parsedData);
+               }
             })
             .catch((error) => console.error(error));
         }
 
 
         async function searchSmartsheet(apiKey, extractedData) {
-           const smartsheetToken = '5vXp11f5jyUuBqH0KWgRoIf7oj562wVwuaVqe'; // THIS IS NOT SAFE
-           const smartsheetResultsDiv = document.getElementById('smartsheet-results');
-             smartsheetResultsDiv.innerHTML = '<p>Searching Smartsheet...</p>';
-
+          const smartsheetToken = "YOUR_SMARTSHEET_API_TOKEN"; // THIS IS NOT SAFE
+          const smartsheetResultsDiv = document.getElementById("smartsheet-results");
+            smartsheetResultsDiv.innerHTML = '<p>Searching Smartsheet...</p>';
+            console.log("Smartsheet token:", smartsheetToken);
            if (!smartsheetToken) {
               smartsheetResultsDiv.innerHTML = '<p style="color: red;">Error: No Smartsheet API token set</p>'
               return;
@@ -301,6 +292,7 @@
                  console.error('Smartsheet API Error:', error);
               }
         }
+
 
         function getCookie(name) {
           const value = `; ${document.cookie}`;
