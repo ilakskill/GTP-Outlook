@@ -104,22 +104,6 @@
         <input id="apikey" name="apikey" type="text" required />
       </div>
 
-      <div>
-        <label for="mainPrompts">Main Prompts</label>
-        <div>
-          <input id="mainPrompts" name="mainPrompts" required type="text" />
-        </div>
-      </div>
-
-      <div>
-        <label for="instructions-content">Instructions</label>
-        <div>
-          <textarea
-            id="instructions-content"
-            name="instructions-content"
-          ></textarea>
-        </div>
-      </div>
         <button type="button" id="processEmail">Process Email</button>
     </form>
 
@@ -159,13 +143,6 @@
             apiKey = getCookie("apiKey");
           }
 
-          let mainPrompts = document
-            .getElementById("mainPrompts")
-            .value.trim();
-
-          let systemInstructions = document
-            .getElementById("instructions-content")
-            .value.trim();
 
           // Get the email body asynchronously
           try {
@@ -174,15 +151,13 @@
               {
                 asyncContext: {
                   apiKey,
-                  mainPrompts,
-                  systemInstructions,
                   item,
                 },
               },
               function (result) {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
                   const emailBody = result.value;
-                  const { apiKey, mainPrompts, systemInstructions, item } =
+                  const { apiKey, item } =
                     result.asyncContext;
                   // truncate email body
                   const truncatedEmail = emailBody
@@ -192,8 +167,6 @@
                   // Call openai
                   callOpenAi(
                     apiKey,
-                    mainPrompts,
-                    systemInstructions,
                     truncatedEmail,
                     item
                   );
@@ -217,13 +190,15 @@
         processEmail();
 
 
-          async function callOpenAi(apiKey, mainPrompts, systemInstructions, selectedText, item) {
-          selectedText = JSON.stringify(selectedText);
-              const payload = {
+          async function callOpenAi(apiKey, selectedText, item) {
+           const payload = {
                 messages: [
-                    { role: "system", content: mainPrompts += systemInstructions },
-                    { role: "user", content: selectedText },
-                  ],
+                    { role: "system", content: "You are a project management assistant. Respond only with JSON." },
+                    {
+                        role: "user",
+                        content: `Analyze the following email to determine the project and site mentioned. Respond only with JSON in this format: {"project": "project_name", "site": "site_name"}. \n\nSubject: ${item.subject}\n\nBody: ${selectedText}`
+                    }
+                ],
                 model: "gpt-4",
                   max_tokens: 1000,
                   temperature: 0.7,
@@ -252,13 +227,9 @@
                             const messageHTML = `
                                   <div>
                                     <div>Project:</div>
-                                    <div>${parsedData.project_name}</div>
+                                    <div>${parsedData.project}</div>
                                    <div>Site ID:</div>
-                                    <div>${parsedData.site_id}</div>
-                                  <div>City:</div>
-                                    <div>${parsedData.city}</div>
-                                     <div>State:</div>
-                                  <div>${parsedData.state}</div>
+                                    <div>${parsedData.site}</div>
                                   </div>
                               `;
 
@@ -290,7 +261,6 @@
                   .catch((error) => console.error(error));
 
         }
-
 
         function getCookie(name) {
           const value = `; ${document.cookie}`;
