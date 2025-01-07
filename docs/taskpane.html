@@ -3,11 +3,20 @@
 <head>
     <meta charset="utf-8" />
     <title>SS Add-in Task Pane</title>
+    <!-- Include Office.js library -->
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <script src="taskpane.js"></script>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
     <h1>Email Analysis</h1>
-      <button id="saveKeyButton">Save Key</button>
+    <div id="key-input">
+        <p>Enter your OpenAI API Key:</p>
+        <input type="text" id="apiKeyInput" placeholder="sk-...">
+        <button id="saveKeyButton">Save Key</button>
+    </div>
+    <div id="results" style="display: none;">
+        <p>Fetching email details...</p>
+    </div>
 </body>
 </html>
