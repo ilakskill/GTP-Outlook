@@ -1,5 +1,6 @@
+                // 6 jan 2025
 
-            Office.onReady(() => {
+Office.onReady(() => {
     const resultsDiv = document.getElementById("results");
 
     // Fetch email details
@@ -7,13 +8,17 @@
 
     if (item) {
         const subject = item.subject;
+        console.log("Email Subject:", subject);
+
         item.body.getAsync("text", (result) => {
             if (result.status === Office.AsyncResultStatus.Succeeded) {
+                console.log("Email Body Retrieved:", result.value);
                 const emailBody = result.value;
 
-                // Send the email data to OpenAI
+                // Send the email data to OpenAI 6 jan 2025
                 analyzeEmail(subject, emailBody)
                     .then(response => {
+                        console.log("OpenAI Response:", response);
                         resultsDiv.innerHTML = `
                             <h2>Analysis Results</h2>
                             <p><strong>Project:</strong> ${response.project}</p>
@@ -21,21 +26,23 @@
                         `;
                     })
                     .catch(error => {
+                        console.error("Error Analyzing Email:", error);
                         resultsDiv.innerHTML = `<p>Error analyzing email: ${error.message}</p>`;
-                        console.error("OpenAI Analysis Error:", error);
                     });
             } else {
-                resultsDiv.innerHTML = `<p>Error retrieving email body: ${result.error.message}</p>`;
                 console.error("Email Body Retrieval Error:", result.error);
+                resultsDiv.innerHTML = `<p>Error retrieving email body: ${result.error.message}</p>`;
             }
         });
     } else {
+        console.error("No email selected.");
         resultsDiv.innerHTML = `<p>No email selected.</p>`;
     }
 });
 
-// Function to analyze email using OpenAI
 async function analyzeEmail(subject, body) {
+    console.log("Sending Email to OpenAI:", { subject, body });
+
     const payload = {
         model: "gpt-4",
         messages: [
@@ -48,18 +55,18 @@ async function analyzeEmail(subject, body) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `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`
+            "Authorization": `Bearer YOUR_OPENAI_API_KEY`
         },
         body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
+        console.error("OpenAI API Error:", response.status, response.statusText);
         throw new Error(`OpenAI API error: ${response.statusText}`);
     }
 
     const data = await response.json();
-    const analysis = data.choices[0].message.content;
+    console.log("OpenAI API Raw Response:", data);
 
-    // Assume OpenAI returns JSON with 'project' and 'site' fields
-    return JSON.parse(analysis);
+    return JSON.parse(data.choices[0].message.content);
 }
