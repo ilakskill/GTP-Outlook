@@ -38,36 +38,43 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Function to analyze the email
-    function startEmailAnalysis(apiKey) {
-        const item = Office.context.mailbox.item;
-
-        if (item) {
-            const subject = item.subject;
-            item.body.getAsync("text", (result) => {
-                if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    const emailBody = result.value;
-
-                    // Send data to OpenAI
-                    analyzeEmail(apiKey, subject, emailBody)
-                        .then(response => {
-                            resultsDiv.innerHTML = `
-                                <h2>Analysis Results</h2>
-                                <p><strong>Project:</strong> ${response.project}</p>
-                                <p><strong>Site:</strong> ${response.site}</p>
-                            `;
-                        })
-                        .catch(error => {
-                            resultsDiv.innerHTML = `<p>Error analyzing email: ${error.message}</p>`;
-                            console.error("OpenAI Analysis Error:", error);
-                        });
-                } else {
-                    resultsDiv.innerHTML = `<p>Error retrieving email body: ${result.error.message}</p>`;
-                }
-            });
-        } else {
-            resultsDiv.innerHTML = `<p>No email selected.</p>`;
-        }
+function startEmailAnalysis(apiKey) {
+    if (!Office.context || !Office.context.mailbox) {
+        console.error("Office.context.mailbox is not available. Ensure the add-in is running in Outlook.");
+        document.getElementById("results").innerHTML = `<p>Error: This add-in can only be used in Outlook.</p>`;
+        return;
     }
+
+    const item = Office.context.mailbox.item;
+    if (!item) {
+        console.error("No email item available.");
+        document.getElementById("results").innerHTML = `<p>Error: No email selected.</p>`;
+        return;
+    }
+
+    const subject = item.subject;
+    item.body.getAsync("text", (result) => {
+        if (result.status === Office.AsyncResultStatus.Succeeded) {
+            const emailBody = result.value;
+
+            analyzeEmail(apiKey, subject, emailBody)
+                .then(response => {
+                    document.getElementById("results").innerHTML = `
+                        <h2>Analysis Results</h2>
+                        <p><strong>Project:</strong> ${response.project}</p>
+                        <p><strong>Site:</strong> ${response.site}</p>
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById("results").innerHTML = `<p>Error analyzing email: ${error.message}</p>`;
+                    console.error("OpenAI Analysis Error:", error);
+                });
+        } else {
+            document.getElementById("results").innerHTML = `<p>Error retrieving email body: ${result.error.message}</p>`;
+        }
+    });
+}
+
 
     // Function to call OpenAI API
     async function analyzeEmail(apiKey, subject, body) {
